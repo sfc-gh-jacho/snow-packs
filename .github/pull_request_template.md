@@ -2,12 +2,13 @@
 
 Describe the business problem and what this change adds or fixes.
 
-## Pack-standard checklist
+## Contribution guide checklist
 
-For catalog additions, complete every item or explain an exception below. For site-only changes, mark pack-specific items not applicable.
+For catalog additions, follow [CONTRIBUTING.md](../CONTRIBUTING.md), complete every item, or explain an exception below. For site-only changes, mark pack-specific items not applicable.
 
 - [ ] GitHub Pages landing page explains the problem, vision, and end product with screenshots or video.
-- [ ] Synthetic-data example works without a Snowflake/data connection or credentials.
+- [ ] Synthetic-data example runs locally or in the reader's own Snowflake account, with self-contained setup and cleanup; `setup` matches.
+- [ ] Apache 2.0 `LICENSE` is present, and a least-privilege option is offered (not only ACCOUNTADMIN).
 - [ ] In-app callouts name the Snowflake capability behind each component and identify mocked behavior.
 - [ ] README includes prerequisites and deploy steps for a customer's own account.
 - [ ] README includes a Customize with Cortex Code section with example prompts.

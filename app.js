@@ -169,7 +169,7 @@
     filters.replaceChildren();
     grid.replaceChildren();
     try {
-      const response = await fetch("./packs.json", { credentials: "omit" });
+      const response = await fetch("./packs.json", { credentials: "omit", cache: "no-cache" });
       if (!response.ok) throw new Error(`Catalog request failed (${response.status}).`);
       packs = validateCatalog(await response.json());
       buildFilters();

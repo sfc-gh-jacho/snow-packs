@@ -10,7 +10,7 @@ Snow Packs is a catalog of industry-specific Snowflake showcases and starting po
 
 | See | Try | Deploy |
 | --- | --- | --- |
-| Understand the business problem and see the end product. | Explore synthetic data without a data connection; learn the capability behind each component. | Use the repo as a template, connect your data, and adapt with Cortex Code. |
+| Understand the business problem and see the end product. | Explore with synthetic data, locally or in your own account; learn the capability behind each component. | Use the repo as a template, connect your data, and adapt with Cortex Code. |
 
 ## Catalog
 
@@ -56,9 +56,9 @@ Never put customer data, secrets, or identifying business logic into a public is
 
 ## How to contribute
 
-Read the [pack standard](CONTRIBUTING.md), then open a PR adding **one entry to `packs.json` and one row to the README catalog**. The site, cards, filters, counts, and feature search update from JSON alone; the README row is the separate human-readable mirror. No HTML or JavaScript edits are needed to add a pack.
+Read the [contribution guide](CONTRIBUTING.md), then open a PR adding **one entry to `packs.json` and one row to the README catalog**. The site, cards, filters, counts, and feature search update from JSON alone; the README row is the separate human-readable mirror. No HTML or JavaScript edits are needed to add a pack.
 
-Before publishing an example, each pack needs a landing page, a no-connection synthetic-data example, capability callouts, deploy/customization instructions, a named owner, and a last-reviewed date. Existing entries are an initial inventory, not a certification that every standard is already met.
+Before publishing an example, each pack needs a landing page, a synthetic-data example that runs locally or in your own Snowflake account, capability callouts, an Apache 2.0 license, deploy/customization instructions, a named owner, and a last-reviewed date. Listing is not a certification that a pack is production-ready.
 
 ## Run this catalog locally
 

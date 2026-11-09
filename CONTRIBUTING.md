@@ -1,79 +1,158 @@
 # Contribute a Snow Pack
 
-A pack starts with a business outcome, not a feature tour. Make it easy for someone else to understand, try, and adapt your work.
+Use this guide while you build, so your repository is ready to list in [Snow Packs](https://sfc-gh-ooral.github.io/snow-packs/) without rework. The catalog is customer-facing: readers are business and technical people at customers and prospects.
 
-## The pack standard
+A pack has two parts: a **GitHub Pages guide** (its landing page) and a **public repository** with the code. Snow Packs links to both.
 
-Before a pack offers a published example, it must include:
+**Must** items are required before listing. **Should** items are strongly recommended; call out any you skip in your pull request.
 
-1. **A GitHub Pages landing page** explaining the business problem and solution vision, with screenshots or a video of the end product. Use synthetic examples and accessible image descriptions or video captions.
-2. **A synthetic-data example mode** that needs no Snowflake connection, credentials, or access to customer data. A local example is fine; document its prerequisites and commands. Clearly distinguish mocked AI responses from live inference.
-3. **In-app capability callouts** naming the Snowflake capability behind each component. Describe what is simulated versus executed; do not claim deployment modes or features that have not been verified.
-4. **A deployment README** with prerequisites, tested versions, account/region requirements, setup and teardown steps, data contracts, expected compute costs, and known limitations. Include a **Customize with Cortex Code** section with example prompts.
-5. **A clean public artifact:** no customer names, logos, data, identifiers, or identifiable business logic. No credentials, private keys, tokens, internal reports, or secrets in files, screenshots, URLs, or commit history. Use synthetic data from the start, not renamed customer records. Do not use official Snowflake logo files or trademarked imagery in this catalog.
-6. **A named owner and a last-reviewed date** in the pack README. Set `author` and `updated` in the catalog to match the latest metadata review; record deployment validation separately.
+## 1. Pick the use case
 
-Prefer enabling GitHub's **Template repository** option when appropriate so users can select **Use this template**. A fork/clone path is acceptable when clearly documented. Confirm an appropriate license and the as-is disclaimer.
+- **Must:** Start from a business problem a specific industry recognizes (e.g., "reproduce a regulatory report as filed"), not from a feature ("a Time Travel demo").
+- **Must:** Choose one primary **industry** and one **business function**. Reuse existing catalog labels where possible: Banking, Insurance, Payments, Capital Markets, Wealth Management, Asset Management, Financial Services · Finance, Operations, Risk, Compliance, Claims, Underwriting, Advisory, Investments. New labels automatically become filter chips.
+- **Should:** Check the catalog first. If your idea matches a **Work in progress** concept, say so in your pull request; your pack replaces that placeholder.
 
-## Add a pack
+## 2. Repository setup
 
-1. Fork this hub and create a branch for your contribution.
-2. Verify your pack against the standard and test its links while signed out.
-3. Add one object to the array in [`packs.json`](packs.json), using the schema below. Reuse industry/function labels where possible; new labels automatically become filter chips.
-4. Add one row to the **Catalog** table in [`README.md`](README.md), with matching title, industry, function, and links.
-5. Serve this hub locally using `python3 -m http.server 8000 --bind 127.0.0.1`. Check search, all filter groups, empty results, keyboard navigation, narrow layout, and both system color schemes.
-6. Open a pull request and complete the pack-standard checklist. Include your review date and any exceptions or limitations.
+- **Must:** A public repository under your GitHub account, named `sfguide-<short-topic>` in lowercase with hyphens.
+- **Must:** A `LICENSE` file. Use **Apache 2.0** to match the catalog. Without a license, nobody can legally reuse or adapt the code.
+- **Must:** GitHub Pages enabled (**Settings > Pages > Deploy from a branch**, `main`, `/ (root)` or `/docs`). Add `.nojekyll` if you use folders starting with `_`.
+- **Should:** Turn on **Settings > Template repository** so readers get a **Use this template** button. A documented fork/clone path is acceptable.
+- **Should:** Add a short repository description and topics (e.g., `snowflake`, `financial-services`, `compliance`).
 
-**One JSON entry updates the whole website.** The README table is maintained separately because GitHub Markdown cannot dynamically render `packs.json`. No site code edits or build commands are required for a new pack.
+Suggested layout:
 
-## Catalog schema
+```text
+README.md                 Setup, prerequisites, customization, owner, review date
+LICENSE                   Apache 2.0
+index.html  (+ css/js)    The GitHub Pages guide
+sql/<topic>.sql           Full runnable script, top to bottom
+data/                     Synthetic data or captured sample results
+```
+
+## 3. The landing page
+
+Write for a customer seeing it for the first time.
+
+- **Must:** Lead with the business problem and outcome on the first screen, in plain language: a one-line headline and a one-paragraph scenario.
+- **Must:** Show the end product with screenshots, a short captioned video, or **real output from an actual run**. Readers should understand the result without running anything. Provide image descriptions or captions.
+- **Must:** Name the Snowflake capability behind each step or component (e.g., "MATCH_RECOGNIZE finds the spoofing sequence"). Only claim capabilities you used and tested.
+- **Must:** Show a visible disclaimer: synthetic data, illustrative logic, not production or regulatory/compliance advice.
+- **Must:** Link to the repository and relevant Snowflake documentation.
+- **Should:** Show prerequisites, time to complete, and expected cost near the top.
+- **Should:** Work on a phone-width screen and in dark mode.
+- **Should:** Avoid trackers and analytics. Bundle small libraries (e.g., a syntax highlighter) in the repository instead of loading them from a CDN.
+- **Must not:** Use official Snowflake logo files or trademarked imagery. A generic icon or text wordmark is fine.
+- **Must not:** Describe internal sales motions ("SEs use this to…", "customers ask us…"). Keep it about the reader's business.
+
+## 4. Try it with sample data
+
+- **Must:** Run entirely on **synthetic data** generated by or shipped with the repository. Deterministic generation (same numbers every run) is ideal, so the page output matches what readers get.
+- **Must:** Say where the example runs, and set `setup` in the catalog entry to match:
+  - **Locally** with no Snowflake connection, such as a mock-data app (`local`), or
+  - **In the reader's own Snowflake account**, such as a SQL script or notebook (`snowflake`).
+- **Must:** Keep setup self-contained: create a dedicated database and warehouse (XSMALL, short auto-suspend) and change nothing that already exists.
+- **Must:** Clearly label anything simulated, such as mocked AI responses versus live Cortex inference.
+- **Must:** Include a cleanup step that removes everything the example created: databases, warehouses, roles, tasks, and dynamic tables.
+- **Should:** Run top to bottom in one worksheet or notebook, with no find-and-replace.
+
+## 5. Security and least privilege
+
+- **Must:** Keep credentials, tokens, keys, account identifiers, secret-bearing URLs, and internal hostnames out of code, screenshots, sample output, and **commit history**. If something leaks, revoke it immediately, then rewrite history. Report it through the hosting platform's private security process; never repeat it in an issue.
+- **Must:** Redact user names in captured output (e.g., `<YOUR_USER>`).
+- **Should:** Offer a **least-privilege path**, not only `USE ROLE ACCOUNTADMIN`: a short block that creates a demo role with only the grants the example needs. Regulated customers will ask.
+- **Should:** Note edition requirements (e.g., Enterprise for masking, Access History, or Time Travel beyond one day) and a Standard Edition fallback where possible.
+
+## 6. Customer data and confidentiality
+
+- **Must not:** Include customer names, logos, data, identifiers, account details, or identifiable business logic, even renamed. Start from synthetic data, not scrubbed customer records.
+- **Must not:** Reference deals, internal programs, internal-only projects, or non-public roadmap features.
+- **Must:** Use generally available features or clearly labeled preview features.
+
+## 7. The README: deploy and adapt
+
+- **Must:** Prerequisites: edition, role, features, tested versions, and regions if relevant.
+- **Must:** Step-by-step run instructions and a list of what gets created; a table of objects works well.
+- **Must:** Expected compute cost and time.
+- **Must:** Known limitations, stated honestly (e.g., "Dynamic Tables don't support MATCH_RECOGNIZE, so spoofing runs on demand").
+- **Must:** A **Customize with Cortex Code** section with two or three prompts tailored to your pack, such as:
+  - "Explain this pack's data model and map it to my schema without changing any objects."
+  - "Replace the synthetic data with my development tables. Propose least-privilege access and a validation plan first."
+  - "Adjust the alert thresholds for my volumes and explain the trade-offs."
+- **Must:** An **owner** and **last-reviewed date**, e.g., `Owner: Jane Doe · Last reviewed: November 2026`.
+- **Must:** The license and an as-is disclaimer: an illustrative example, not an official Snowflake product, and not supported by Snowflake Support.
+
+## 8. Claims and wording
+
+- **Must:** Describe outcomes as possibilities ("helps analysts spot…"), not guarantees. Avoid unmeasured numbers such as "cuts review time 80%".
+- **Must:** Qualify results from planted or synthetic cases, e.g., "12 alerts and no false positives **on this synthetic data set**".
+- **Should:** Use "example", "guide", or "showcase" rather than "demo" on customer-facing pages.
+- **Should:** Write short, plain sentences, and define industry acronyms once.
+
+## 9. Before you submit
+
+- [ ] Opened the Pages URL and repository in a signed-out browser window; both load correctly.
+- [ ] Ran the example end to end in a clean account or role, then ran cleanup.
+- [ ] Page output matches what the example produces today.
+- [ ] Searched files and history for secrets and real names (e.g., `git log -p | grep -iE "password|token|secret|account"`).
+- [ ] `LICENSE`, owner, and review date are present.
+- [ ] The **Customize with Cortex Code** section is present.
+- [ ] Checked the page at phone width.
+
+## 10. Add your pack to the catalog
+
+1. Fork this repository and create a branch.
+2. Add one object to [`packs.json`](packs.json) using the schema below.
+3. Add one matching row to the **Catalog** table in [`README.md`](README.md).
+4. Serve this site locally with `python3 -m http.server 8000 --bind 127.0.0.1`. Check search, filters, empty results, keyboard navigation, narrow layout, and both color schemes.
+5. Open a pull request, complete the checklist, and note any skipped **Should** items or limitations.
+
+**One JSON entry updates the whole website:** cards, filters, counts, and search. The README table is a separate human-readable mirror because GitHub Markdown cannot render `packs.json`. No site code changes or build step are needed.
+
+Not ready to build yet? Use [the proposal form](https://github.com/sfc-gh-ooral/snow-packs/issues/new?template=pack-proposal.md).
+
+### Catalog schema
 
 ```json
 {
-  "id": "inventory-planning",
-  "title": "Inventory Planning",
-  "summary": "Reduce stockout risk by identifying products that need replenishment attention.",
-  "industry": "Retail",
-  "function": "Operations",
-  "features": ["Snowflake SQL"],
+  "id": "trade-surveillance",
+  "title": "Trade Surveillance",
+  "summary": "Surface wash trades, spoofing, front-running, and marking the close, with a plain-English explanation behind every alert.",
+  "industry": "Capital Markets",
+  "function": "Compliance",
+  "features": ["MATCH_RECOGNIZE", "Dynamic Tables", "Dynamic Data Masking"],
+  "tags": ["market abuse", "trading", "alerts"],
+  "setup": "snowflake",
   "pagesUrl": "https://YOUR-OWNER.github.io/YOUR-PACK/",
   "demoUrl": "",
   "repoUrl": "https://github.com/YOUR-OWNER/YOUR-PACK",
   "author": "Your name",
-  "updated": "2026-10"
+  "updated": "2026-11"
 }
 ```
 
-Replace example URLs with verified, permanent HTTPS URLs. Never submit authentication nonces or expiring signed URLs. `id` must be unique and kebab-case; `updated` is `YYYY-MM`; `features` is a nonempty array of verified capabilities. `summary` is one sentence, business outcome first, without unmeasured promises. `demoUrl` must be an empty string if there is no hosted example; the card omits **Try example** and points readers to the repo. Do not put local-server addresses or deployment instructions in `demoUrl`.
+- `id`: unique, kebab-case.
+- `summary`: one sentence, business outcome first, without unmeasured promises.
+- `features`: a nonempty list of capabilities you verified.
+- `pagesUrl`, `repoUrl`: verified, permanent HTTPS URLs. Never use authentication nonces or expiring signed URLs.
+- `demoUrl`: a hosted, no-install example if one exists; otherwise an empty string, and the card points readers to the repository. Don't put local-server addresses or setup instructions here.
+- `author`, `updated`: the owner and `YYYY-MM` of the latest review, matching the README.
 
 Optional fields:
 
-- `workInProgress`: boolean, default `false`. Use `true` for an approved placeholder concept. Set `features` to `[]` and `pagesUrl`, `repoUrl`, and `demoUrl` to empty strings. Describe the intended use case as planned, without implementation claims or release dates. The site shows **Work in progress** with no action links or capability tags. This is a placeholder flag, not a readiness tier or filter. Remove the flag and supply verified capabilities and destinations when the example is published.
-- `access`: `public` (default) or `internal`. Internal listings require maintainer approval and public-safe descriptions only. This flag is a label, **not an access control**: all JSON is public. The destination must enforce authentication.
-- `setup`: `local` (default) or `snowflake`. Use `snowflake` when the example runs as a synthetic-data script in the reader's own Snowflake account rather than on their machine; the card's setup note changes to match. Not allowed on work-in-progress entries.
-- `tags`: additional plain-text search terms. Feature tags are already searchable without this field.
+- `setup`: `local` (default) or `snowflake`; see section 4. Not allowed on work-in-progress entries.
+- `tags`: extra plain-text search terms. Feature tags are already searchable.
+- `workInProgress`: boolean, default `false`. Use `true` only for an approved placeholder concept: set `features` to `[]` and all three URLs to empty strings, and describe the use case as planned, without implementation claims or release dates. The card shows **Work in progress** with no links or capability tags. Remove the flag and add verified capabilities and links when the pack is published.
+- `access`: `public` (default) or `internal`. Internal listings need maintainer approval and public-safe descriptions only. This is a label, **not an access control**: all JSON is public, so the destination must enforce authentication.
 
-## Document validation and limitations
+## Keep it current
 
-All packs are showcases and starting points. Clearly identify simulated features and local versus hosted execution. Record what was tested, when, and in which environment, along with prerequisites, costs, permissions, and teardown steps.
+- Re-run the example when Snowflake features or syntax change, then update the review date in the README and catalog.
+- Fix broken links quickly, and tell the maintainers if you move or archive the repository.
+- Update validation notes when evidence is no longer current.
+- If you step away, hand ownership to someone else or ask for the pack to be delisted.
 
-Catalog inclusion does not mean production approval, Snowflake Support coverage, or suitability for regulated decisions. Metadata review is not end-to-end deployment validation.
-
-## Customize with Cortex Code: example prompts
-
-Include prompts adapted to your pack, such as:
-
-> Explain the application's data contracts. Propose a mapping from my development schema and identify missing fields; do not change anything yet.
-
-> Add a new KPI with an explicit business definition and focused tests. Keep the no-connection example functional.
-
-> Review deployment permissions and propose a least-privilege setup, cost controls, and teardown plan before executing changes.
-
-## Review and maintenance
-
-Maintain the synthetic example when APIs change. Retest links, update the last-reviewed date after review, and document breaking changes. Update validation notes when evidence is no longer current. Report exposed credentials through the hosting platform's private security process and revoke them immediately; never repeat them in an issue.
-
-Use [the proposal form](https://github.com/sfc-gh-ooral/snow-packs/issues/new?template=pack-proposal.md) for ideas that are not ready for catalog inclusion. Additions are reviewed by maintainers; submitting a PR does not imply endorsement or certification.
+Maintainers review additions against this guide. Listing is not an endorsement, certification, production approval, or Snowflake Support commitment, and metadata review is not end-to-end deployment validation.
 
 ## Disclaimer
 

@@ -32,12 +32,15 @@ Repository:
 
 Use permanent URLs without tokens or authentication nonces. Clearly flag employee-only destinations.
 
-## Pack-standard checklist
+## Contribution guide checklist
+
+See [CONTRIBUTING.md](https://github.com/sfc-gh-ooral/snow-packs/blob/main/CONTRIBUTING.md).
 
 - [ ] Business vision and screenshots/video
-- [ ] No-connection synthetic-data example
+- [ ] Synthetic-data example (runs locally or in your own Snowflake account)
 - [ ] In-app Snowflake capability callouts
 - [ ] Deploy README and Customize with Cortex Code prompts
+- [ ] Apache 2.0 license and least-privilege option
 - [ ] No customer identifiers, data, logic, logos, or secrets
 - [ ] Named owner and last-reviewed date
 
