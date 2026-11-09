@@ -71,19 +71,19 @@
     "updated": "2026-10"
   },
   {
-    "id": "aml-investigation-workbench",
-    "title": "AML Investigation Workbench",
-    "summary": "A planned workspace for connecting transaction patterns, customer context, and case evidence to support investigator-led reviews.",
+    "id": "aml-transaction-monitoring",
+    "title": "AML Transaction Monitoring",
+    "summary": "Help investigators spot structuring, rapid movement, funnel accounts, and high-risk geographies in transaction data, with a risk-scored alert queue and a draft case summary behind each alert.",
     "industry": "Banking",
     "function": "Compliance",
-    "workInProgress": true,
-    "features": [],
-    "tags": ["anti-money laundering", "financial crime", "transactions"],
-    "pagesUrl": "",
+    "features": ["Dynamic Tables", "Row Access Policies", "Cortex AI", "Snowflake SQL"],
+    "tags": ["anti-money laundering", "financial crime", "transactions", "structuring", "alerts", "case management"],
+    "setup": "snowflake",
+    "pagesUrl": "https://sfc-gh-jacho.github.io/sfguide-aml-transaction-monitoring/",
     "demoUrl": "",
-    "repoUrl": "",
-    "author": "Snow Packs",
-    "updated": "2026-10"
+    "repoUrl": "https://github.com/sfc-gh-jacho/sfguide-aml-transaction-monitoring",
+    "author": "Janet Cho",
+    "updated": "2026-11"
   },
   {
     "id": "kyc-onboarding-insights",
@@ -157,6 +157,21 @@
     "pagesUrl": "https://sfc-gh-jacho.github.io/sfguide-trade-surveillance/",
     "demoUrl": "",
     "repoUrl": "https://github.com/sfc-gh-jacho/sfguide-trade-surveillance",
+    "author": "Janet Cho",
+    "updated": "2026-11"
+  },
+  {
+    "id": "client-data-entitlements",
+    "title": "Client Data Entitlements",
+    "summary": "Serve one wealth-management dataset to advisors, branch managers, compliance, and an external research partner, with each audience's access enforced on the data itself.",
+    "industry": "Wealth Management",
+    "function": "Compliance",
+    "features": ["Row Access Policies", "Dynamic Data Masking", "Tag-based Masking", "Aggregation Policies", "Secure Views"],
+    "tags": ["entitlements", "data governance", "advisors", "client data", "privacy", "research sharing"],
+    "setup": "snowflake",
+    "pagesUrl": "https://sfc-gh-jacho.github.io/sfguide-fsi-client-entitlements/",
+    "demoUrl": "",
+    "repoUrl": "https://github.com/sfc-gh-jacho/sfguide-fsi-client-entitlements",
     "author": "Janet Cho",
     "updated": "2026-11"
   },
