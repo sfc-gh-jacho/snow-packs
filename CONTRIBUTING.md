@@ -32,10 +32,12 @@ data/                     Synthetic data or captured sample results
 
 ## 3. The landing page
 
-Write for a customer seeing it for the first time.
+Write for a customer seeing it for the first time. The landing page is your pitch: make it as polished and visual as possible, so readers can picture exactly what they could have.
 
 - **Must:** Lead with the business problem and outcome on the first screen, in plain language: a one-line headline and a one-paragraph scenario.
-- **Must:** Show the end product with screenshots, a short captioned video, or **real output from an actual run**. Readers should understand the result without running anything. Provide image descriptions or captions.
+- **Must:** Show the finished end product. If your pack includes an application or dashboard, include **screenshots of the running app** (see [Capture screenshots with CoCo](#capture-screenshots-with-coco)). If it is script- or notebook-only, show **real output from an actual run**: result tables, charts, or a before/after. Readers should understand the result without running anything.
+- **Must:** Give every screenshot a caption that says what the reader is looking at and which Snowflake capability produced it, plus alt text.
+- **Should:** Tell the story with several screenshots (overview first, then key drill-downs), or a short captioned video or GIF of the main workflow.
 - **Must:** Name the Snowflake capability behind each step or component (e.g., "MATCH_RECOGNIZE finds the spoofing sequence"). Only claim capabilities you used and tested.
 - **Must:** Show a visible disclaimer: synthetic data, illustrative logic, not production or regulatory/compliance advice.
 - **Must:** Link to the repository and relevant Snowflake documentation.
@@ -44,6 +46,18 @@ Write for a customer seeing it for the first time.
 - **Should:** Avoid trackers and analytics. Bundle small libraries (e.g., a syntax highlighter) in the repository instead of loading them from a CDN.
 - **Must not:** Use official Snowflake logo files or trademarked imagery. A generic icon or text wordmark is fine.
 - **Must not:** Describe internal sales motions ("SEs use this to…", "customers ask us…"). Keep it about the reader's business.
+
+### Capture screenshots with CoCo
+
+Let CoCo run your finished app and take the screenshots for you:
+
+1. **Maximize the CoCo browser window** first, so screenshots are full-size and the layout isn't squeezed into a narrow panel.
+2. Ask CoCo to start the app with its synthetic data and open it in the built-in browser.
+3. Ask it to click through the main workflow and screenshot each key screen, for example: "Run the app, click through the overview, a drill-down and the AI Q&A, and take a full-window screenshot of each. Save them to `docs/images/`."
+4. Review every image before publishing: synthetic data only, no account URLs, user names, tokens, or internal tabs visible.
+5. Ask CoCo to add the images to the landing page with captions and alt text, then check the page at desktop and phone width.
+
+Keep images in the repository (e.g., `docs/images/`), compressed (PNG or WebP, ideally under 500 KB each), and rerun the capture whenever the UI changes so screenshots stay current.
 
 ## 4. Try it with sample data
 
@@ -97,6 +111,8 @@ Write for a customer seeing it for the first time.
 - [ ] Searched files and history for secrets and real names (e.g., `git log -p | grep -iE "password|token|secret|account"`).
 - [ ] `LICENSE`, owner, and review date are present.
 - [ ] The **Customize with Cortex Code** section is present.
+- [ ] Landing page shows the finished product: captioned screenshots of the running app, or real run output for script-only packs.
+- [ ] Reviewed every screenshot for real data, account URLs, user names, and secrets.
 - [ ] Checked the page at phone width.
 
 ## 10. Add your pack to the catalog

@@ -36,7 +36,7 @@ Use permanent URLs without tokens or authentication nonces. Clearly flag employe
 
 See [CONTRIBUTING.md](https://github.com/sfc-gh-ooral/snow-packs/blob/main/CONTRIBUTING.md).
 
-- [ ] Business vision and screenshots/video
+- [ ] Business vision and screenshots of the running app (or real run output)
 - [ ] Synthetic-data example (runs locally or in your own Snowflake account)
 - [ ] In-app Snowflake capability callouts
 - [ ] Deploy README and Customize with Cortex Code prompts
