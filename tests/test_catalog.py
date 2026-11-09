@@ -74,7 +74,7 @@ class CatalogTests(unittest.TestCase):
 
     def test_search_title_summary_feature_case_and_whitespace(self):
         self.open()
-        for term, expected in [("loss triangle", 1), ("escalations", 1), ("  CORTEX   ANALYST  ", 1), ("Cortex", 2), ("", len(self.catalog)), ("due diligence", 1)]:
+        for term, expected in [("loss triangle", 1), ("escalations", 1), ("  CORTEX   ANALYST  ", 1), ("Cortex", 2), ("MATCH_RECOGNIZE", 1), ("time travel", 1), ("", len(self.catalog)), ("due diligence", 1)]:
             self.page.get_by_role("searchbox").fill(term)
             self.count(expected)
 
@@ -208,16 +208,16 @@ class CatalogTests(unittest.TestCase):
             self.assertNotIn("maturity", pack)
 
     def test_placeholder_catalog_and_search(self):
-        self.assertEqual(len(self.catalog), 12)
+        self.assertEqual(len(self.catalog), 13)
         placeholders = [pack for pack in self.catalog if pack.get("workInProgress")]
-        self.assertEqual(len(placeholders), 10)
+        self.assertEqual(len(placeholders), 9)
         for pack in placeholders:
             self.assertEqual(pack["features"], [])
             self.assertTrue(all(pack[key] == "" for key in ["pagesUrl", "repoUrl", "demoUrl"]))
         self.open()
-        self.assertEqual(self.page.locator(".pack-card").count(), 12)
-        self.assertEqual(self.page.locator(".wip-label").count(), 10)
-        self.assertIn("10 work in progress", self.page.locator("#results-status").inner_text())
+        self.assertEqual(self.page.locator(".pack-card").count(), 13)
+        self.assertEqual(self.page.locator(".wip-label").count(), 9)
+        self.assertIn("9 work in progress", self.page.locator("#results-status").inner_text())
         self.page.get_by_role("searchbox").fill("payment fraud")
         self.count(1)
         self.assertTrue(self.page.get_by_role("heading", name="Payment Fraud Insights").is_visible())
@@ -227,8 +227,9 @@ class CatalogTests(unittest.TestCase):
         self.page.route("**/packs.json", lambda route: route.fulfill(json=list(reversed(self.catalog))))
         self.open()
         expected = [pack["id"] for pack in reversed(self.catalog) if not pack.get("workInProgress")]
-        self.assertEqual(self.page.locator(".pack-card").evaluate_all("cards => cards.slice(0, 2).map(card => card.dataset.packId)"), expected)
-        self.assertEqual(self.page.locator(".available-label").all_text_contents(), ["Explore now"] * 2)
+        published_count = len(expected)
+        self.assertEqual(self.page.locator(".pack-card").evaluate_all("(cards, n) => cards.slice(0, n).map(card => card.dataset.packId)", published_count), expected)
+        self.assertEqual(self.page.locator(".available-label").all_text_contents(), ["Explore now"] * len(expected))
         for scheme in ["light", "dark"]:
             self.page.emulate_media(color_scheme=scheme)
             published = self.page.locator(".available-card").first
@@ -241,6 +242,15 @@ class CatalogTests(unittest.TestCase):
         self.page.get_by_role("group", name="Industry", exact=True).get_by_role("button", name="Insurance", exact=True).click()
         self.assertEqual(self.page.locator(".pack-card").first.get_attribute("data-pack-id"), "loss-triangle-suite")
 
+    def test_setup_notes_match_where_examples_run(self):
+        self.open()
+        for pack in self.catalog:
+            if pack.get("workInProgress"):
+                continue
+            note = self.page.locator(f'[data-pack-id="{pack["id"]}"] .example-note').inner_text()
+            expected = "in your Snowflake account" if pack.get("setup") == "snowflake" else "locally"
+            self.assertIn(expected, note)
+
     def test_invalid_placeholders_rejected(self):
         placeholder = next(pack for pack in self.catalog if pack.get("workInProgress"))
         invalid = [
@@ -248,6 +258,7 @@ class CatalogTests(unittest.TestCase):
             {**placeholder, "pagesUrl": "https://example.com/unfinished"},
             {**placeholder, "features": ["Unverified capability"]},
             {**placeholder, "workInProgress": False},
+            {**placeholder, "setup": "snowflake"},
         ]
         for pack in invalid:
             with self.subTest(pack=pack):

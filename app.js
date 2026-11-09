@@ -51,6 +51,7 @@
       if (placeholder && (pack.features.length || [pack.pagesUrl, pack.repoUrl, pack.demoUrl].some(url => url !== ""))) throw new Error("Placeholders must not claim capabilities or link to unfinished resources.");
       if (pack.tags !== undefined && (!Array.isArray(pack.tags) || pack.tags.some(tag => typeof tag !== "string"))) throw new Error("Invalid search tags.");
       if (!safeUrl(pack.pagesUrl, placeholder) || !safeUrl(pack.repoUrl, placeholder) || !safeUrl(pack.demoUrl, true)) throw new Error("Pack links must be HTTPS.");
+      if (pack.setup !== undefined && !(!placeholder && ["local", "snowflake"].includes(pack.setup))) throw new Error("Invalid setup mode.");
       if (pack.access !== undefined && !["public", "internal"].includes(pack.access)) throw new Error("Invalid access label.");
       ids.add(pack.id);
     }
@@ -127,6 +128,8 @@
       const note = element("p", "example-note");
       if (internal) {
         note.textContent = "Access-controlled showcase. Not a public customer deployment template.";
+      } else if (pack.setup === "snowflake") {
+        note.append(link("Try this example in your Snowflake account", pack.repoUrl, "", `Setup instructions for ${pack.title}`), " with synthetic data using the guide's SQL script.");
       } else {
         note.append(link("Try this example locally", pack.repoUrl, "", `Local setup instructions for ${pack.title}`), " with sample data using the Quick Start.");
       }

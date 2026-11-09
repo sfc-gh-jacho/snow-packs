@@ -50,6 +50,7 @@ Optional fields:
 
 - `workInProgress`: boolean, default `false`. Use `true` for an approved placeholder concept. Set `features` to `[]` and `pagesUrl`, `repoUrl`, and `demoUrl` to empty strings. Describe the intended use case as planned, without implementation claims or release dates. The site shows **Work in progress** with no action links or capability tags. This is a placeholder flag, not a readiness tier or filter. Remove the flag and supply verified capabilities and destinations when the example is published.
 - `access`: `public` (default) or `internal`. Internal listings require maintainer approval and public-safe descriptions only. This flag is a label, **not an access control**: all JSON is public. The destination must enforce authentication.
+- `setup`: `local` (default) or `snowflake`. Use `snowflake` when the example runs as a synthetic-data script in the reader's own Snowflake account rather than on their machine; the card's setup note changes to match. Not allowed on work-in-progress entries.
 - `tags`: additional plain-text search terms. Feature tags are already searchable without this field.
 
 ## Document validation and limitations

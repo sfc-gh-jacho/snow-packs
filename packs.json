@@ -26,6 +26,21 @@
     "updated": "2026-10"
   },
   {
+    "id": "regulatory-audit-time-travel",
+    "title": "Regulatory Reporting with Time Travel",
+    "summary": "Show a regulator exactly what a report said on the filing date, what changed afterward, and who changed it, without restoring backups.",
+    "industry": "Banking",
+    "function": "Compliance",
+    "features": ["Time Travel", "Zero-Copy Cloning", "Streams", "Access History"],
+    "tags": ["regulatory reporting", "audit trail", "capital report", "filings", "undrop"],
+    "setup": "snowflake",
+    "pagesUrl": "https://sfc-gh-jacho.github.io/sfguide-regulatory-audit-time-travel/",
+    "demoUrl": "",
+    "repoUrl": "https://github.com/sfc-gh-jacho/sfguide-regulatory-audit-time-travel",
+    "author": "Janet Cho",
+    "updated": "2026-11"
+  },
+  {
     "id": "credit-risk-monitor",
     "title": "Credit Risk Monitor",
     "summary": "A planned exploration of borrower trends, portfolio concentrations, and early warning signals to support credit reviews.",
@@ -131,19 +146,19 @@
     "updated": "2026-10"
   },
   {
-    "id": "trade-surveillance-workbench",
-    "title": "Trade Surveillance Workbench",
-    "summary": "A planned workspace for examining order and execution patterns alongside market context to support surveillance investigations.",
+    "id": "trade-surveillance",
+    "title": "Trade Surveillance",
+    "summary": "Surface wash trades, spoofing, front-running, and marking the close in a day of orders, with a plain-English explanation behind every alert.",
     "industry": "Capital Markets",
     "function": "Compliance",
-    "workInProgress": true,
-    "features": [],
-    "tags": ["trading", "orders", "market conduct"],
-    "pagesUrl": "",
+    "features": ["MATCH_RECOGNIZE", "Dynamic Tables", "Dynamic Data Masking", "Snowflake SQL"],
+    "tags": ["market abuse", "trading", "orders", "market conduct", "alerts"],
+    "setup": "snowflake",
+    "pagesUrl": "https://sfc-gh-jacho.github.io/sfguide-trade-surveillance/",
     "demoUrl": "",
-    "repoUrl": "",
-    "author": "Snow Packs",
-    "updated": "2026-10"
+    "repoUrl": "https://github.com/sfc-gh-jacho/sfguide-trade-surveillance",
+    "author": "Janet Cho",
+    "updated": "2026-11"
   },
   {
     "id": "client-portfolio-review",
