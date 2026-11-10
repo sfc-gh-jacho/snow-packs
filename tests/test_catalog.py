@@ -229,7 +229,12 @@ class CatalogTests(unittest.TestCase):
         expected = [pack["id"] for pack in reversed(self.catalog) if not pack.get("workInProgress")]
         published_count = len(expected)
         self.assertEqual(self.page.locator(".pack-card").evaluate_all("(cards, n) => cards.slice(0, n).map(card => card.dataset.packId)", published_count), expected)
-        self.assertEqual(self.page.locator(".available-label").all_text_contents(), ["Available now"] * len(expected))
+        self.assertEqual(self.page.locator(".available-label, .pack-card time, #catalog-updated").count(), 0)
+        self.assertNotIn("reviewed", self.page.locator("#pack-grid").inner_text().lower())
+        self.assertNotIn("latest pack review", self.page.locator("body").inner_text().lower())
+        for toggle in self.page.locator(".preview-toggle").all():
+            self.assertEqual(" ".join(toggle.inner_text().split()), "▶ Preview")
+            self.assertTrue(toggle.evaluate("node => node.parentElement.classList.contains('card-top')"))
         for scheme in ["light", "dark"]:
             self.page.emulate_media(color_scheme=scheme)
             published = self.page.locator(".available-card").first

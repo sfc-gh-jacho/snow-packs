@@ -108,20 +108,12 @@
       return card;
     }
     card.classList.add("available-card");
-    const top = element("div", "available-top");
-    top.append(element("p", "available-label", internal ? "Employee access" : "Available now"));
-    if (pack.images) top.append(previewToggle(pack, card));
-    card.prepend(top);
+    if (pack.images) badges.append(previewToggle(pack, card));
     if (internal) card.append(element("p", "access-note", "Internal · Snowflake employees only"));
     const features = element("ul", "feature-tags");
     features.setAttribute("aria-label", "Snowflake features and capabilities");
     pack.features.forEach(feature => features.append(element("li", "", feature)));
     card.append(features);
-    const meta = element("div", "pack-meta");
-    const updated = element("time", "", `Reviewed ${pack.updated}`);
-    updated.dateTime = pack.updated;
-    meta.append(updated);
-    card.append(meta);
     const actions = element("div", "card-actions");
     const accessLabel = internal ? "; employee sign-in required" : "";
     actions.append(link("View pack ↗", pack.pagesUrl, "button primary", `View ${pack.title}${accessLabel}`));
@@ -152,8 +144,8 @@
     toggle.setAttribute("aria-controls", panelId);
     const icon = element("span", "preview-icon", "▶");
     icon.setAttribute("aria-hidden", "true");
-    toggle.append(icon, ` Preview app (${pack.images.length})`);
-    toggle.setAttribute("aria-label", `Preview ${pack.title}: ${pack.images.length} screenshots`);
+    toggle.append(icon, " Preview");
+    toggle.setAttribute("aria-label", `Preview ${pack.title} screenshots`);
 
     const panel = element("div", "preview-panel");
     panel.id = panelId;
@@ -306,8 +298,6 @@
       packs = validateCatalog(await response.json());
       buildFilters();
       render();
-      const latest = packs.map(pack => pack.updated).sort().at(-1);
-      document.querySelector("#catalog-updated").textContent = latest ? `Latest pack review ${latest}` : "";
       search.disabled = false;
       document.querySelector("#reset-filters").disabled = false;
     } catch (failure) {
