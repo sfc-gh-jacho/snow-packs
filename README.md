@@ -33,7 +33,7 @@ Snow Packs is a catalog of industry-specific Snowflake showcases and starting po
 
 **14 packs: 6 published examples and 8 work-in-progress concepts.** [Propose the next one](https://github.com/sfc-gh-ooral/snow-packs/issues/new?template=pack-proposal.md).
 
-The Loss Triangle and Contact Driver packs provide local synthetic-data quick starts; the Regulatory Reporting, Trade Surveillance, AML Transaction Monitoring, and Client Data Entitlements packs run a synthetic-data SQL script in your own Snowflake account. None are hosted examples, and all currently support fork/clone rather than GitHub's **Use this template** button. The eight placeholders describe intended use cases only, without implementation claims or release dates.
+The Loss Triangle and Contact Driver packs provide local synthetic-data quick starts; the Regulatory Reporting, Trade Surveillance, AML Transaction Monitoring, and Client Data Entitlements packs run a synthetic-data SQL script in your own Snowflake account and offer GitHub's **Use this template** button. None are hosted examples; the Loss Triangle and Contact Driver packs support fork/clone. The eight placeholders describe intended use cases only, without implementation claims or release dates.
 
 Packs are showcases and starting points, not production certifications. Review each pack's setup requirements, validation evidence, costs, and limitations before adapting it.
 
