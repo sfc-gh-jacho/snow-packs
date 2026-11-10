@@ -59,7 +59,7 @@ Never put customer data, secrets, or identifying business logic into a public is
 
 Read the [contribution guide](CONTRIBUTING.md), then open a PR adding **one entry to `packs.json` and one row to the README catalog**. The site, cards, filters, counts, and feature search update from JSON alone; the README row is the separate human-readable mirror. No HTML or JavaScript edits are needed to add a pack.
 
-Before publishing an example, each pack needs a landing page, a synthetic-data example that runs locally or in your own Snowflake account, capability callouts, an Apache 2.0 license, deploy/customization instructions, a named owner, and a last-reviewed date. Listing is not a certification that a pack is production-ready.
+Before publishing, each pack needs a landing page with app screenshots, an app that runs in a no-account mode on synthetic data, capability callouts, an Apache 2.0 license, deploy/customization instructions, a named owner, and a last-reviewed date. Listing is not a certification that a pack is production-ready.
 
 ## Run this catalog locally
 
@@ -71,7 +71,7 @@ python3 -m http.server 8000 --bind 127.0.0.1
 
 Open `http://127.0.0.1:8000`. Opening `index.html` directly with `file://` does not support loading the JSON catalog reliably.
 
-The published site is four static files: `index.html`, `styles.css`, `app.js`, and `packs.json`, plus a favicon and link-preview image in `assets/`. There is no build step, framework, npm dependency, analytics, remote font, or third-party script. Search stays in the browser; the only catalog data request is same-origin `packs.json`.
+The published site is four static files: `index.html`, `styles.css`, `app.js`, and `packs.json`, plus a favicon, link-preview image, and pack card thumbnails (`assets/packs/`) in `assets/`. There is no build step, framework, npm dependency, analytics, remote font, or third-party script. Search stays in the browser; the only catalog data request is same-origin `packs.json`.
 
 To update the link-preview image, edit `assets/social-card.html` and screenshot it at 1200×630 to `assets/social-card.png` (e.g., with Playwright). Slack and other apps cache previews, so links already shared may keep the old image.
 

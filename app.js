@@ -52,6 +52,7 @@
       if (pack.tags !== undefined && (!Array.isArray(pack.tags) || pack.tags.some(tag => typeof tag !== "string"))) throw new Error("Invalid search tags.");
       if (!safeUrl(pack.pagesUrl, placeholder) || !safeUrl(pack.repoUrl, placeholder) || !safeUrl(pack.demoUrl, true)) throw new Error("Pack links must be HTTPS.");
       if (pack.setup !== undefined && !(!placeholder && ["local", "snowflake"].includes(pack.setup))) throw new Error("Invalid setup mode.");
+      if (pack.image !== undefined && (placeholder || typeof pack.image !== "string" || !/^assets\/packs\/[a-z0-9-]+\.(jpg|png|webp)$/.test(pack.image) || typeof pack.imageAlt !== "string" || !pack.imageAlt.trim())) throw new Error("Invalid pack image.");
       if (pack.access !== undefined && !["public", "internal"].includes(pack.access)) throw new Error("Invalid access label.");
       ids.add(pack.id);
     }
@@ -108,6 +109,22 @@
     }
     card.classList.add("available-card");
     card.prepend(element("p", "available-label", internal ? "Employee access" : "Explore now"));
+    if (pack.image) {
+      // Decorative duplicate of the "View pack" link, so it is skipped by keyboard and screen readers.
+      const thumbLink = link("", pack.pagesUrl, "pack-thumb");
+      thumbLink.tabIndex = -1;
+      thumbLink.setAttribute("aria-hidden", "true");
+      const thumb = element("img");
+      thumb.src = pack.image;
+      thumb.alt = pack.imageAlt;
+      thumb.width = 960;
+      thumb.height = 600;
+      thumb.loading = "lazy";
+      thumb.decoding = "async";
+      thumbLink.append(thumb);
+      card.prepend(thumbLink);
+      card.classList.add("has-thumb");
+    }
     if (internal) card.append(element("p", "access-note", "Internal · Snowflake employees only"));
     const features = element("ul", "feature-tags");
     features.setAttribute("aria-label", "Snowflake features and capabilities");

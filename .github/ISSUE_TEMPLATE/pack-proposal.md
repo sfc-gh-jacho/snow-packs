@@ -36,8 +36,8 @@ Use permanent URLs without tokens or authentication nonces. Clearly flag employe
 
 See [CONTRIBUTING.md](https://github.com/sfc-gh-ooral/snow-packs/blob/main/CONTRIBUTING.md).
 
-- [ ] Business vision and screenshots of the running app (or real run output)
-- [ ] Synthetic-data example (runs locally or in your own Snowflake account)
+- [ ] Business vision and screenshots of the running app
+- [ ] App with a no-account mode on synthetic data, plus a live Snowflake mode
 - [ ] In-app Snowflake capability callouts
 - [ ] Deploy README and Customize with Cortex Code prompts
 - [ ] Apache 2.0 license and least-privilege option

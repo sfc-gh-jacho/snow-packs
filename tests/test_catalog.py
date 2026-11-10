@@ -168,7 +168,7 @@ class CatalogTests(unittest.TestCase):
         self.page.route("**/packs.json", lambda route: route.fulfill(json=[*self.catalog, new_pack]))
         self.open()
         self.count(len(self.catalog) + 1)
-        self.assertEqual(self.page.locator("#pack-grid img").count(), 0)
+        self.assertEqual(self.page.locator("#pack-grid img:not(.pack-thumb img)").count(), 0)
         self.page.get_by_role("group", name="Industry", exact=True).get_by_role("button", name="Retail", exact=True).click()
         self.count(1)
         self.assertEqual(self.page.get_by_role("link", name="Try <img src=x onerror=alert(1)> example", exact=True).get_attribute("href"), new_pack["demoUrl"])
@@ -250,6 +250,37 @@ class CatalogTests(unittest.TestCase):
             note = self.page.locator(f'[data-pack-id="{pack["id"]}"] .example-note').inner_text()
             expected = "in your Snowflake account" if pack.get("setup") == "snowflake" else "locally"
             self.assertIn(expected, note)
+
+    def test_pack_thumbnails(self):
+        self.open()
+        with_images = [pack for pack in self.catalog if pack.get("image")]
+        self.assertGreaterEqual(len(with_images), 2)
+        for pack in with_images:
+            self.assertTrue((ROOT / pack["image"]).is_file(), pack["image"])
+            img = self.page.locator(f'[data-pack-id="{pack["id"]}"] .pack-thumb img')
+            img.scroll_into_view_if_needed()
+            self.page.wait_for_function("img => img.complete && img.naturalWidth > 0", arg=img.element_handle())
+            self.assertEqual(img.get_attribute("alt"), pack["imageAlt"])
+            self.assertEqual(self.page.locator(f'[data-pack-id="{pack["id"]}"] .pack-thumb').get_attribute("href"), pack["pagesUrl"])
+        self.assertEqual(self.page.locator(".wip-card img").count(), 0)
+        self.assertTrue(all(url.startswith(self.url) for url in self.requests), self.requests)
+
+    def test_invalid_images_rejected(self):
+        published = next(pack for pack in self.catalog if pack.get("image"))
+        placeholder = next(pack for pack in self.catalog if pack.get("workInProgress"))
+        invalid = [
+            {**published, "image": "https://example.com/shot.png"},
+            {**published, "image": "../secrets.png"},
+            {**published, "imageAlt": ""},
+            {**placeholder, "image": published["image"], "imageAlt": "x"},
+        ]
+        for pack in invalid:
+            with self.subTest(image=pack.get("image")):
+                self.page.route("**/packs.json", lambda route, _request, payload=pack: route.fulfill(json=[payload]))
+                self.page.goto(self.url)
+                self.page.locator("#load-error").wait_for(state="visible")
+                self.count(0)
+                self.page.unroute("**/packs.json")
 
     def test_invalid_placeholders_rejected(self):
         placeholder = next(pack for pack in self.catalog if pack.get("workInProgress"))

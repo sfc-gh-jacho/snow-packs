@@ -6,8 +6,9 @@ Describe the business problem and what this change adds or fixes.
 
 For catalog additions, follow [CONTRIBUTING.md](../CONTRIBUTING.md), complete every item, or explain an exception below. For site-only changes, mark pack-specific items not applicable.
 
-- [ ] GitHub Pages landing page explains the problem and vision, and shows the finished product with captioned screenshots of the running app (or real run output for script-only packs). Screenshots reviewed for real data and secrets.
-- [ ] Synthetic-data example runs locally or in the reader's own Snowflake account, with self-contained setup and cleanup; `setup` matches.
+- [ ] GitHub Pages landing page explains the problem and vision, and shows the finished product with captioned screenshots of the running app. Screenshots reviewed for real data and secrets.
+- [ ] The app runs in no-account mode on synthetic data from a fresh clone (`setup` is `local`), and in live mode against Snowflake with self-contained setup and cleanup.
+- [ ] Card thumbnail added at `assets/packs/<id>.jpg` with `image` and `imageAlt` set.
 - [ ] Apache 2.0 `LICENSE` is present, and a least-privilege option is offered (not only ACCOUNTADMIN).
 - [ ] In-app callouts name the Snowflake capability behind each component and identify mocked behavior.
 - [ ] README includes prerequisites and deploy steps for a customer's own account.

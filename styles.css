@@ -110,6 +110,10 @@ legend { font-size: .72rem; font-weight: 700; margin-bottom: 6px; }
 .available-card::before, .wip-card::before { display: none; }
 .available-label { align-self: flex-start; background: var(--navy); color: #fff; padding: 7px 12px; border-radius: 4px; font-size: .75rem; font-weight: 750; letter-spacing: .07em; text-transform: uppercase; margin-bottom: 20px; }
 .available-card .card-actions .primary { flex: 1 1 auto; }
+.pack-thumb { display: block; margin: -26px -26px 20px; border-bottom: 1px solid var(--line); border-radius: 7px 7px 0 0; overflow: hidden; background: var(--surface); }
+.pack-thumb img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; object-position: top left; transition: transform .25s; }
+.pack-thumb:hover img { transform: scale(1.03); }
+@media (max-width: 700px) { .pack-thumb { margin: -24px -24px 18px; } }
 .wip-card { background: var(--surface); border-style: dashed; box-shadow: none; }
 .wip-card h3 { color: var(--muted); font-size: 1.25rem; }
 .wip-card .badge { background: transparent; color: var(--muted); border: 1px solid var(--line); }
