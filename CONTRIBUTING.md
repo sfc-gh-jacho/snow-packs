@@ -144,7 +144,7 @@ Then ask CoCo to run the app, click through the workflow, and capture the screen
 
 1. Fork this repository and create a branch.
 2. Add one object to [`packs.json`](packs.json) using the schema below.
-3. Add a card thumbnail: a 16:10 screenshot of your app's main screen, saved as `assets/packs/<id>.jpg` (960×600, ideally under 150 KB). It lives in this repository, not yours, so the catalog never loads outside images.
+3. Add **2 to 8 card preview screenshots** of your app's key screens (main dashboard first), saved as `assets/packs/<id>-1.jpg`, `<id>-2.jpg`, and so on: 16:10, 960×600, ideally under 100 KB each. Readers see them in a carousel when they hover or tap **Preview app** on your card. They live in this repository, not yours, so the catalog never loads outside images.
 4. Add one matching row to the **Catalog** table in [`README.md`](README.md).
 5. Serve this site locally with `python3 -m http.server 8000 --bind 127.0.0.1`. Check search, filters, empty results, keyboard navigation, narrow layout, and both color schemes.
 6. Open a pull request, complete the checklist, and note any skipped **Should** items or limitations.
@@ -165,8 +165,10 @@ Not ready to build yet? Use [the proposal form](https://github.com/sfc-gh-ooral/
   "features": ["Cortex AI", "Sentiment Analysis", "Text Classification"],
   "tags": ["contact center", "calls", "customer experience"],
   "setup": "local",
-  "image": "assets/packs/contact-driver-analytics.jpg",
-  "imageAlt": "Dashboard with call volume, sentiment, and escalation KPIs and a weekly trend chart",
+  "images": [
+    { "src": "assets/packs/contact-driver-analytics-1.jpg", "alt": "Dashboard: call volume, sentiment, and escalation KPIs with a weekly trend" },
+    { "src": "assets/packs/contact-driver-analytics-2.jpg", "alt": "AI insights: executive summary, key findings, and recommendations from Cortex" }
+  ],
   "pagesUrl": "https://YOUR-OWNER.github.io/YOUR-PACK/",
   "demoUrl": "",
   "repoUrl": "https://github.com/YOUR-OWNER/YOUR-PACK",
@@ -184,7 +186,7 @@ Not ready to build yet? Use [the proposal form](https://github.com/sfc-gh-ooral/
 
 Optional fields:
 
-- `image`, `imageAlt`: the card thumbnail path (`assets/packs/<id>.jpg`, `.png`, or `.webp`) and a one-sentence description of what it shows. Both are required for new packs. Not allowed on work-in-progress entries.
+- `images`: 2–8 preview screenshots, each `{ "src": "assets/packs/<id>-<n>.jpg", "alt": "…" }` (`.jpg`, `.png`, or `.webp`). The `alt` text doubles as the carousel caption, so describe what the screen shows and which capability powers it. Required for new packs; at least 1 is enforced. Not allowed on work-in-progress entries.
 - `setup`: `local` (default) when the app runs in no-account mode; `snowflake` only for older listings that run solely in the reader's account. See section 4. Not allowed on work-in-progress entries.
 - `tags`: extra plain-text search terms. Feature tags are already searchable.
 - `workInProgress`: boolean, default `false`. Use `true` only for an approved placeholder concept: set `features` to `[]` and all three URLs to empty strings, and describe the use case as planned, without implementation claims or release dates. The card shows **Work in progress** with no links or capability tags. Remove the flag and add verified capabilities and links when the pack is published.
@@ -192,7 +194,7 @@ Optional fields:
 
 ## Keep it current
 
-- Re-run the app and setup when Snowflake features or syntax change, refresh screenshots and the card thumbnail if the UI changed, then update the review date in the README and catalog.
+- Re-run the app and setup when Snowflake features or syntax change, refresh screenshots and the card previews if the UI changed, then update the review date in the README and catalog.
 - Fix broken links quickly, and tell the maintainers if you move or archive the repository.
 - Update validation notes when evidence is no longer current.
 - If you step away, hand ownership to someone else or ask for the pack to be delisted.

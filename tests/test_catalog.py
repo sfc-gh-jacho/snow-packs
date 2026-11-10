@@ -168,7 +168,7 @@ class CatalogTests(unittest.TestCase):
         self.page.route("**/packs.json", lambda route: route.fulfill(json=[*self.catalog, new_pack]))
         self.open()
         self.count(len(self.catalog) + 1)
-        self.assertEqual(self.page.locator("#pack-grid img:not(.pack-thumb img)").count(), 0)
+        self.assertEqual(self.page.locator("#pack-grid img:not(.preview-frame img)").count(), 0)
         self.page.get_by_role("group", name="Industry", exact=True).get_by_role("button", name="Retail", exact=True).click()
         self.count(1)
         self.assertEqual(self.page.get_by_role("link", name="Try <img src=x onerror=alert(1)> example", exact=True).get_attribute("href"), new_pack["demoUrl"])
@@ -229,7 +229,7 @@ class CatalogTests(unittest.TestCase):
         expected = [pack["id"] for pack in reversed(self.catalog) if not pack.get("workInProgress")]
         published_count = len(expected)
         self.assertEqual(self.page.locator(".pack-card").evaluate_all("(cards, n) => cards.slice(0, n).map(card => card.dataset.packId)", published_count), expected)
-        self.assertEqual(self.page.locator(".available-label").all_text_contents(), ["Explore now"] * len(expected))
+        self.assertEqual(self.page.locator(".available-label").all_text_contents(), ["Available now"] * len(expected))
         for scheme in ["light", "dark"]:
             self.page.emulate_media(color_scheme=scheme)
             published = self.page.locator(".available-card").first
@@ -251,31 +251,71 @@ class CatalogTests(unittest.TestCase):
             expected = "in your Snowflake account" if pack.get("setup") == "snowflake" else "locally"
             self.assertIn(expected, note)
 
-    def test_pack_thumbnails(self):
+    def test_preview_carousel(self):
         self.open()
-        with_images = [pack for pack in self.catalog if pack.get("image")]
+        with_images = [pack for pack in self.catalog if pack.get("images")]
         self.assertGreaterEqual(len(with_images), 2)
+        self.assertEqual(self.page.locator("#pack-grid img").count(), 0)  # nothing loads until a preview opens
+        self.assertEqual(self.page.locator(".wip-card .preview-toggle").count(), 0)
         for pack in with_images:
-            self.assertTrue((ROOT / pack["image"]).is_file(), pack["image"])
-            img = self.page.locator(f'[data-pack-id="{pack["id"]}"] .pack-thumb img')
-            img.scroll_into_view_if_needed()
-            self.page.wait_for_function("img => img.complete && img.naturalWidth > 0", arg=img.element_handle())
-            self.assertEqual(img.get_attribute("alt"), pack["imageAlt"])
-            self.assertEqual(self.page.locator(f'[data-pack-id="{pack["id"]}"] .pack-thumb').get_attribute("href"), pack["pagesUrl"])
-        self.assertEqual(self.page.locator(".wip-card img").count(), 0)
+            for image in pack["images"]:
+                self.assertTrue((ROOT / image["src"]).is_file(), image["src"])
+            card = self.page.locator(f'[data-pack-id="{pack["id"]}"]')
+            toggle, panel = card.locator(".preview-toggle"), card.locator(".preview-panel")
+            self.assertFalse(panel.is_visible())
+            toggle.hover()
+            panel.wait_for(state="visible")
+            self.assertEqual(toggle.get_attribute("aria-expanded"), "true")
+            imgs = panel.locator("img")
+            self.assertEqual(imgs.count(), len(pack["images"]))
+            self.page.wait_for_function("imgs => imgs.every(i => i.complete && i.naturalWidth > 0)", arg=imgs.element_handles())
+            self.assertEqual(panel.locator(".preview-dot").count(), len(pack["images"]))
+            self.assertIn(pack["images"][0]["alt"], panel.locator(".preview-caption").inner_text())
+            self.page.wait_for_function("cap => cap.textContent.startsWith('2/')", arg=panel.locator(".preview-caption").element_handle(), timeout=5000)
+            panel.locator(".preview-dot").last.click()
+            self.assertIn(pack["images"][-1]["alt"], panel.locator(".preview-caption").inner_text())
+            self.page.mouse.move(5, 5)
+            panel.wait_for(state="hidden")
+            self.assertEqual(toggle.get_attribute("aria-expanded"), "false")
+        first = self.page.locator(f'[data-pack-id="{with_images[0]["id"]}"]')
+        first.locator(".preview-toggle").focus()
+        first.locator(".preview-panel").wait_for(state="visible")
+        self.page.keyboard.press("Escape")
+        first.locator(".preview-panel").wait_for(state="hidden")
+        self.assertTrue(first.locator(".preview-toggle").evaluate("node => node === document.activeElement"))
         self.assertTrue(all(url.startswith(self.url) for url in self.requests), self.requests)
 
+    def test_preview_tap_pins_on_touch(self):
+        context = self.browser.new_context(viewport={"width": 375, "height": 800}, has_touch=True, is_mobile=True)
+        try:
+            page = context.new_page()
+            page.goto(self.url)
+            page.wait_for_function("document.querySelector('#results-status').textContent.includes('in the collection')")
+            card = page.locator(f'[data-pack-id="{next(p for p in self.catalog if p.get("images"))["id"]}"]')
+            card.locator(".preview-toggle").tap()
+            card.locator(".preview-panel").wait_for(state="visible")
+            page.wait_for_timeout(400)
+            self.assertTrue(card.locator(".preview-panel").is_visible())
+            self.assertTrue(page.evaluate("document.documentElement.scrollWidth <= innerWidth"))
+            card.locator(".preview-toggle").tap()
+            card.locator(".preview-panel").wait_for(state="hidden")
+        finally:
+            context.close()
+
     def test_invalid_images_rejected(self):
-        published = next(pack for pack in self.catalog if pack.get("image"))
+        published = next(pack for pack in self.catalog if pack.get("images"))
         placeholder = next(pack for pack in self.catalog if pack.get("workInProgress"))
+        good = published["images"][0]
         invalid = [
-            {**published, "image": "https://example.com/shot.png"},
-            {**published, "image": "../secrets.png"},
-            {**published, "imageAlt": ""},
-            {**placeholder, "image": published["image"], "imageAlt": "x"},
+            {**published, "images": [{**good, "src": "https://example.com/shot.png"}]},
+            {**published, "images": [{**good, "src": "../secrets.png"}]},
+            {**published, "images": [{**good, "alt": ""}]},
+            {**published, "images": []},
+            {**published, "images": [good] * 9},
+            {**placeholder, "images": [good]},
         ]
         for pack in invalid:
-            with self.subTest(image=pack.get("image")):
+            with self.subTest(images=str(pack.get("images"))[:60]):
                 self.page.route("**/packs.json", lambda route, _request, payload=pack: route.fulfill(json=[payload]))
                 self.page.goto(self.url)
                 self.page.locator("#load-error").wait_for(state="visible")

@@ -52,7 +52,7 @@
       if (pack.tags !== undefined && (!Array.isArray(pack.tags) || pack.tags.some(tag => typeof tag !== "string"))) throw new Error("Invalid search tags.");
       if (!safeUrl(pack.pagesUrl, placeholder) || !safeUrl(pack.repoUrl, placeholder) || !safeUrl(pack.demoUrl, true)) throw new Error("Pack links must be HTTPS.");
       if (pack.setup !== undefined && !(!placeholder && ["local", "snowflake"].includes(pack.setup))) throw new Error("Invalid setup mode.");
-      if (pack.image !== undefined && (placeholder || typeof pack.image !== "string" || !/^assets\/packs\/[a-z0-9-]+\.(jpg|png|webp)$/.test(pack.image) || typeof pack.imageAlt !== "string" || !pack.imageAlt.trim())) throw new Error("Invalid pack image.");
+      if (pack.images !== undefined && (placeholder || !Array.isArray(pack.images) || !pack.images.length || pack.images.length > 8 || pack.images.some(image => !image || typeof image.src !== "string" || !/^assets\/packs\/[a-z0-9-]+\.(jpg|png|webp)$/.test(image.src) || typeof image.alt !== "string" || !image.alt.trim()))) throw new Error("Invalid pack images.");
       if (pack.access !== undefined && !["public", "internal"].includes(pack.access)) throw new Error("Invalid access label.");
       ids.add(pack.id);
     }
@@ -108,23 +108,10 @@
       return card;
     }
     card.classList.add("available-card");
-    card.prepend(element("p", "available-label", internal ? "Employee access" : "Explore now"));
-    if (pack.image) {
-      // Decorative duplicate of the "View pack" link, so it is skipped by keyboard and screen readers.
-      const thumbLink = link("", pack.pagesUrl, "pack-thumb");
-      thumbLink.tabIndex = -1;
-      thumbLink.setAttribute("aria-hidden", "true");
-      const thumb = element("img");
-      thumb.src = pack.image;
-      thumb.alt = pack.imageAlt;
-      thumb.width = 960;
-      thumb.height = 600;
-      thumb.loading = "lazy";
-      thumb.decoding = "async";
-      thumbLink.append(thumb);
-      card.prepend(thumbLink);
-      card.classList.add("has-thumb");
-    }
+    const top = element("div", "available-top");
+    top.append(element("p", "available-label", internal ? "Employee access" : "Available now"));
+    if (pack.images) top.append(previewToggle(pack, card));
+    card.prepend(top);
     if (internal) card.append(element("p", "access-note", "Internal · Snowflake employees only"));
     const features = element("ul", "feature-tags");
     features.setAttribute("aria-label", "Snowflake features and capabilities");
@@ -153,6 +140,134 @@
       card.append(note);
     }
     return card;
+  }
+
+  // Hover, focus, or tap the toggle to show a screenshot carousel over the card.
+  // Images are created on first open, so cards stay light until someone asks.
+  function previewToggle(pack, card) {
+    const panelId = `preview-${pack.id}`;
+    const toggle = element("button", "preview-toggle");
+    toggle.type = "button";
+    toggle.setAttribute("aria-expanded", "false");
+    toggle.setAttribute("aria-controls", panelId);
+    const icon = element("span", "preview-icon", "▶");
+    icon.setAttribute("aria-hidden", "true");
+    toggle.append(icon, ` Preview app (${pack.images.length})`);
+    toggle.setAttribute("aria-label", `Preview ${pack.title}: ${pack.images.length} screenshots`);
+
+    const panel = element("div", "preview-panel");
+    panel.id = panelId;
+    panel.hidden = true;
+    panel.setAttribute("role", "region");
+    panel.setAttribute("aria-label", `${pack.title} screenshots`);
+    let slides = [];
+    let dots = [];
+    let caption;
+    let index = 0;
+    let timer;
+    let closeTimer;
+    let pinned = false;
+    let suppressOpen = false;
+    let openedBy = "";
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    function build() {
+      const frame = link("", pack.pagesUrl, "preview-frame");
+      frame.tabIndex = -1;
+      frame.setAttribute("aria-hidden", "true");
+      slides = pack.images.map((image, n) => {
+        const img = element("img");
+        img.src = image.src;
+        img.alt = image.alt;
+        img.width = 960;
+        img.height = 600;
+        img.decoding = "async";
+        img.className = n === 0 ? "active" : "";
+        frame.append(img);
+        return img;
+      });
+      caption = element("p", "preview-caption");
+      caption.setAttribute("aria-live", "polite");
+      const nav = element("div", "preview-dots");
+      dots = pack.images.map((image, n) => {
+        const dot = element("button", "preview-dot");
+        dot.type = "button";
+        dot.setAttribute("aria-label", `Screenshot ${n + 1} of ${pack.images.length}: ${image.alt}`);
+        dot.addEventListener("click", () => { stopCycle(); show(n); });
+        nav.append(dot);
+        return dot;
+      });
+      panel.append(frame, caption, nav);
+    }
+
+    function show(n) {
+      index = (n + slides.length) % slides.length;
+      slides.forEach((img, i) => img.classList.toggle("active", i === index));
+      dots.forEach((dot, i) => dot.setAttribute("aria-current", String(i === index)));
+      caption.textContent = `${index + 1}/${slides.length} · ${pack.images[index].alt}`;
+    }
+
+    function stopCycle() {
+      clearInterval(timer);
+      timer = undefined;
+    }
+
+    function open(source) {
+      clearTimeout(closeTimer);
+      if (suppressOpen || !panel.hidden) return;
+      openedBy = source;
+      if (!slides.length) build();
+      document.querySelectorAll(".preview-toggle[aria-expanded='true']").forEach(other => {
+        if (other !== toggle) other.dispatchEvent(new CustomEvent("preview-close"));
+      });
+      panel.style.top = `${toggle.offsetTop + toggle.offsetHeight + 10}px`;
+      panel.hidden = false;
+      toggle.setAttribute("aria-expanded", "true");
+      show(0);
+      if (!reduceMotion.matches && slides.length > 1) timer = setInterval(() => show(index + 1), 2200);
+    }
+
+    function close() {
+      stopCycle();
+      pinned = false;
+      panel.hidden = true;
+      toggle.setAttribute("aria-expanded", "false");
+    }
+
+    function closeSoon() {
+      if (pinned) return;
+      clearTimeout(closeTimer);
+      closeTimer = setTimeout(() => {
+        const hovered = panel.matches(":hover") || toggle.matches(":hover");
+        const focused = card.contains(document.activeElement);
+        if (!hovered && (openedBy === "pointer" || !focused)) close();
+      }, 150);
+    }
+
+    toggle.addEventListener("mouseenter", () => open("pointer"));
+    toggle.addEventListener("focus", () => open("keyboard"));
+    toggle.addEventListener("click", () => {
+      if (panel.hidden) { open("pointer"); pinned = true; }
+      else if (pinned) close();
+      else pinned = true;
+    });
+    toggle.addEventListener("mouseleave", closeSoon);
+    toggle.addEventListener("preview-close", close);
+    panel.addEventListener("mouseenter", () => clearTimeout(closeTimer));
+    panel.addEventListener("mouseleave", closeSoon);
+    card.addEventListener("focusout", event => {
+      if (!card.contains(event.relatedTarget)) { pinned = false; closeSoon(); }
+    });
+    card.addEventListener("keydown", event => {
+      if (event.key === "Escape" && !panel.hidden) {
+        close();
+        suppressOpen = true;
+        toggle.focus({ preventScroll: true });
+        suppressOpen = false;
+      }
+    });
+    card.append(panel);
+    return toggle;
   }
 
   function render() {

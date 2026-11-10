@@ -71,7 +71,7 @@ python3 -m http.server 8000 --bind 127.0.0.1
 
 Open `http://127.0.0.1:8000`. Opening `index.html` directly with `file://` does not support loading the JSON catalog reliably.
 
-The published site is four static files: `index.html`, `styles.css`, `app.js`, and `packs.json`, plus a favicon, link-preview image, and pack card thumbnails (`assets/packs/`) in `assets/`. There is no build step, framework, npm dependency, analytics, remote font, or third-party script. Search stays in the browser; the only catalog data request is same-origin `packs.json`.
+The published site is four static files: `index.html`, `styles.css`, `app.js`, and `packs.json`, plus a favicon, link-preview image, and pack preview screenshots (`assets/packs/`, loaded only when someone opens a preview) in `assets/`. There is no build step, framework, npm dependency, analytics, remote font, or third-party script. Search stays in the browser; the only catalog data request is same-origin `packs.json`.
 
 To update the link-preview image, edit `assets/social-card.html` and screenshot it at 1200×630 to `assets/social-card.png` (e.g., with Playwright). Slack and other apps cache previews, so links already shared may keep the old image.
 

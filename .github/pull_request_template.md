@@ -8,7 +8,7 @@ For catalog additions, follow [CONTRIBUTING.md](../CONTRIBUTING.md), complete ev
 
 - [ ] GitHub Pages landing page explains the problem and vision, and shows the finished product with captioned screenshots of the running app. Screenshots reviewed for real data and secrets.
 - [ ] The app runs in no-account mode on synthetic data from a fresh clone (`setup` is `local`), and in live mode against Snowflake with self-contained setup and cleanup.
-- [ ] Card thumbnail added at `assets/packs/<id>.jpg` with `image` and `imageAlt` set.
+- [ ] 2–8 card preview screenshots added at `assets/packs/<id>-<n>.jpg`, listed in `images` with descriptive `alt` captions.
 - [ ] Apache 2.0 `LICENSE` is present, and a least-privilege option is offered (not only ACCOUNTADMIN).
 - [ ] In-app callouts name the Snowflake capability behind each component and identify mocked behavior.
 - [ ] README includes prerequisites and deploy steps for a customer's own account.

@@ -7,8 +7,13 @@
     "function": "Finance",
     "features": ["Cortex Agents", "Cortex Analyst", "Semantic Views", "Snowflake SQL"],
     "setup": "local",
-    "image": "assets/packs/loss-triangle-suite.jpg",
-    "imageAlt": "Loss Reserve Portfolio dashboard with reserve KPIs, paid loss development curves by accident year, and Cortex anomaly alerts",
+    "images": [
+      { "src": "assets/packs/loss-triangle-suite-1.jpg", "alt": "Portfolio dashboard: reserve KPIs, paid loss development by accident year, and Cortex anomaly alerts" },
+      { "src": "assets/packs/loss-triangle-suite-2.jpg", "alt": "Cortex actuarial agent answering reserve questions in natural language" },
+      { "src": "assets/packs/loss-triangle-suite-3.jpg", "alt": "Triangle explorer: loss development triangles with age-to-age factors" },
+      { "src": "assets/packs/loss-triangle-suite-4.jpg", "alt": "Segment analysis comparing development patterns across coverages" },
+      { "src": "assets/packs/loss-triangle-suite-5.jpg", "alt": "Consistency testing that applies uniform selection rules across triangles" }
+    ],
     "pagesUrl": "https://sfc-gh-ooral.github.io/sfguide-loss-triangle-analysis/",
     "demoUrl": "",
     "repoUrl": "https://github.com/sfc-gh-ooral/sfguide-loss-triangle-analysis",
@@ -23,8 +28,12 @@
     "function": "Operations",
     "features": ["Cortex AI", "Sentiment Analysis", "Text Classification", "Snowflake SQL"],
     "setup": "local",
-    "image": "assets/packs/contact-driver-analytics.jpg",
-    "imageAlt": "Contact Driver Analytics dashboard with call volume, sentiment, and escalation KPIs, a weekly trend chart, and contacts by line of business",
+    "images": [
+      { "src": "assets/packs/contact-driver-analytics-1.jpg", "alt": "Dashboard: call volume, sentiment, and escalation KPIs with a weekly trend and contacts by line of business" },
+      { "src": "assets/packs/contact-driver-analytics-2.jpg", "alt": "Top contact drivers by line of business, product, segment, and sentiment" },
+      { "src": "assets/packs/contact-driver-analytics-3.jpg", "alt": "AI insights: executive summary, key findings, and recommendations from Cortex" },
+      { "src": "assets/packs/contact-driver-analytics-4.jpg", "alt": "Transcript explorer with sentiment score, AI summary, and the full conversation" }
+    ],
     "pagesUrl": "https://sfc-gh-ooral.github.io/sfguide-contact-driver-analytics/",
     "demoUrl": "",
     "repoUrl": "https://github.com/sfc-gh-ooral/sfguide-contact-driver-analytics",
