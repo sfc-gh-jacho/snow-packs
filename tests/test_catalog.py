@@ -81,16 +81,18 @@ class CatalogTests(unittest.TestCase):
     def test_each_filter_and_combined_filters(self):
         self.open()
         for field, label in [("industry", "Industry"), ("function", "Function")]:
-            group = self.page.get_by_role("group", name=label, exact=True)
-            for button in group.get_by_role("button").all():
-                value = button.get_attribute("data-value")
-                button.click()
+            select = self.page.get_by_label(label, exact=True)
+            values = select.locator("option").evaluate_all("nodes => nodes.map(n => n.value)")
+            self.assertEqual(values, [""] + sorted({pack[field] for pack in self.catalog}))
+            for value in values:
+                select.select_option(value)
                 expected = len([pack for pack in self.catalog if not value or pack[field] == value])
                 self.count(expected)
-                self.assertEqual(button.get_attribute("aria-pressed"), "true")
-            group.get_by_role("button", name="All", exact=True).click()
-        self.page.get_by_role("group", name="Industry", exact=True).get_by_role("button", name="Insurance", exact=True).click()
-        self.page.get_by_role("group", name="Function", exact=True).get_by_role("button", name="Operations", exact=True).click()
+                if value:
+                    self.assertIn(f"{value} ({expected})", select.locator("option:checked").inner_text())
+            select.select_option("")
+        self.page.get_by_label("Industry", exact=True).select_option("Insurance")
+        self.page.get_by_label("Function", exact=True).select_option("Operations")
         self.count(0)
         self.assertTrue(self.page.locator("#empty-state").is_visible())
         self.assertEqual(self.page.locator(".pack-card").count(), 0)
@@ -130,11 +132,11 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(self.page.locator("h1").count(), 1)
         self.assertEqual(self.page.locator("main").count(), 1)
         self.assertEqual(self.page.get_by_role("searchbox").get_attribute("id"), "search")
-        button = self.page.get_by_role("group", name="Industry", exact=True).get_by_role("button", name="Insurance", exact=True)
-        button.focus()
-        self.page.keyboard.press("Space")
+        select = self.page.get_by_label("Industry", exact=True)
+        select.focus()
+        select.select_option("Insurance")
         self.count(sum(pack["industry"] == "Insurance" for pack in self.catalog))
-        self.assertEqual(button.get_attribute("aria-pressed"), "true")
+        self.assertEqual(select.input_value(), "Insurance")
         self.assertEqual(self.page.locator("#results-status").get_attribute("aria-live"), "polite")
 
     def test_network_error_and_retry(self):
@@ -169,7 +171,7 @@ class CatalogTests(unittest.TestCase):
         self.open()
         self.count(len(self.catalog) + 1)
         self.assertEqual(self.page.locator("#pack-grid img:not(.preview-frame img)").count(), 0)
-        self.page.get_by_role("group", name="Industry", exact=True).get_by_role("button", name="Retail", exact=True).click()
+        self.page.get_by_label("Industry", exact=True).select_option("Retail")
         self.count(1)
         self.assertEqual(self.page.get_by_role("link", name="Try <img src=x onerror=alert(1)> example", exact=True).get_attribute("href"), new_pack["demoUrl"])
         self.page.get_by_role("searchbox").fill("testkeyword")
@@ -202,7 +204,7 @@ class CatalogTests(unittest.TestCase):
 
     def test_only_industry_and_function_dimensions(self):
         self.open()
-        self.assertEqual(self.page.locator("#filters legend").all_text_contents(), ["Industry", "Function"])
+        self.assertEqual(self.page.locator("#filters label").all_text_contents(), ["Industry", "Function"])
         self.assertEqual(self.page.locator(".maturity, [data-filter='maturity']").count(), 0)
         for pack in self.catalog:
             self.assertNotIn("maturity", pack)
@@ -240,11 +242,12 @@ class CatalogTests(unittest.TestCase):
             published = self.page.locator(".available-card").first
             planned = self.page.locator(".wip-card").first
             self.assertNotEqual(published.evaluate("node => getComputedStyle(node).backgroundColor"), planned.evaluate("node => getComputedStyle(node).backgroundColor"))
-            self.assertEqual(planned.locator(":scope > :first-child").get_attribute("class"), "wip-label")
+            self.assertEqual(planned.locator(":scope > :first-child").get_attribute("class"), "card-visual")
+            self.assertEqual(planned.locator(":scope > :nth-child(2)").get_attribute("class"), "wip-label")
             self.assertEqual(planned.locator(".wip-label").evaluate("node => getComputedStyle(node).textTransform"), "uppercase")
             self.assertGreater(planned.locator(".wip-label").bounding_box()["width"], planned.bounding_box()["width"] * .7)
             self.assertEqual(planned.locator("a, button").count(), 0)
-        self.page.get_by_role("group", name="Industry", exact=True).get_by_role("button", name="Insurance", exact=True).click()
+        self.page.get_by_label("Industry", exact=True).select_option("Insurance")
         self.assertEqual(self.page.locator(".pack-card").first.get_attribute("data-pack-id"), "loss-triangle-suite")
 
     def test_setup_notes_match_where_examples_run(self):
@@ -306,6 +309,124 @@ class CatalogTests(unittest.TestCase):
             card.locator(".preview-panel").wait_for(state="hidden")
         finally:
             context.close()
+
+    def test_hero_shows_original_art_while_wall_is_off(self):
+        self.open()
+        self.assertFalse(self.page.locator("#hero-wall").is_visible())
+        self.assertEqual(self.page.locator("#hero-wall img").count(), 0)
+        self.assertTrue(self.page.locator(".hero-fallback").is_visible())
+
+    def test_industry_bands_on_every_card(self):
+        self.open()
+        cards = self.page.locator(".pack-card")
+        self.assertEqual(cards.locator(".card-visual").count(), len(self.catalog))
+        colors = {}
+        for pack in self.catalog:
+            band = self.page.locator(f'[data-pack-id="{pack["id"]}"] .card-visual')
+            self.assertEqual(band.get_attribute("aria-hidden"), "true")
+            colors.setdefault(pack["industry"], band.evaluate("node => node.style.getPropertyValue('--ind')"))
+        self.assertEqual(len(set(colors.values())), len(colors))  # one distinct color per industry
+
+    def test_outcome_tiles_filter_and_combine(self):
+        self.open()
+        tiles = self.page.locator(".outcome-tile")
+        self.assertEqual(tiles.count(), 4)
+        crime = self.page.locator('.outcome-tile[data-outcome="catch-financial-crime"]')
+        expected = [pack for pack in self.catalog if pack.get("outcome") == "catch-financial-crime"]
+        ready = sum(not pack.get("workInProgress") for pack in expected)
+        self.assertIn(f"{ready} to explore", crime.inner_text())
+        crime.click()
+        self.assertEqual(crime.get_attribute("aria-pressed"), "true")
+        self.count(len(expected))
+        self.page.get_by_label("Industry", exact=True).select_option("Capital Markets")
+        self.count(sum(pack["industry"] == "Capital Markets" for pack in expected))
+        crime.click()  # clicking the active tile clears it
+        self.assertEqual(crime.get_attribute("aria-pressed"), "false")
+        self.count(sum(pack["industry"] == "Capital Markets" for pack in self.catalog))
+        self.page.get_by_role("button", name="Reset filters").click()
+        self.count(len(self.catalog))
+        self.page.get_by_role("searchbox").fill("prove compliance")  # outcome titles are searchable
+        self.count(sum(pack.get("outcome") == "prove-compliance" for pack in self.catalog))
+
+    def test_detail_drawer(self):
+        self.open()
+        pack = next(pack for pack in self.catalog if pack.get("images"))
+        card = self.page.locator(f'[data-pack-id="{pack["id"]}"]')
+        trigger = card.locator(".title-button")
+        self.assertEqual(trigger.inner_text(), pack["title"])
+        trigger.click()
+        dialog = self.page.locator("#pack-dialog")
+        dialog.wait_for(state="visible")
+        self.assertTrue(self.page.locator("#drawer-close").evaluate("node => node === document.activeElement"))
+        self.assertEqual(dialog.locator("#drawer-title").inner_text(), pack["title"])
+        self.assertEqual(dialog.locator(".drawer-thumb").count(), len(pack["images"]))
+        dialog.locator(".drawer-thumb").nth(1).click()
+        self.assertEqual(dialog.locator(".drawer-shot").get_attribute("alt"), pack["images"][1]["alt"])
+        prompt = dialog.locator(".coco-prompt").inner_text()
+        self.assertIn(pack["repoUrl"], prompt)
+        self.assertNotIn("demo", prompt.lower())
+        self.assertEqual(dialog.get_by_role("link", name=f'View {pack["title"]}').get_attribute("href"), pack["pagesUrl"])
+        self.assertIn(f'pack={pack["id"]}', self.page.url)
+        self.page.keyboard.press("Escape")
+        dialog.wait_for(state="hidden")
+        self.assertNotIn("pack=", self.page.url)
+        self.assertTrue(trigger.evaluate("node => node === document.activeElement"))
+        card.get_by_role("button", name=f'{pack["title"]} details').click()
+        dialog.wait_for(state="visible")
+        self.page.mouse.click(5, 300)  # backdrop click closes
+        dialog.wait_for(state="hidden")
+        self.assertEqual(self.page.locator(".wip-card .title-button, .wip-card .details-link").count(), 0)
+
+    def test_drawer_copy_buttons(self):
+        self.context.grant_permissions(["clipboard-read", "clipboard-write"])
+        self.open()
+        pack = next(pack for pack in self.catalog if not pack.get("workInProgress"))
+        self.page.locator(f'[data-pack-id="{pack["id"]}"] .title-button').click()
+        dialog = self.page.locator("#pack-dialog")
+        dialog.get_by_role("button", name="Copy prompt").click()
+        self.assertIn(pack["repoUrl"], self.page.evaluate("navigator.clipboard.readText()"))
+        dialog.get_by_role("button", name="Copy link").click()
+        self.assertEqual(self.page.evaluate("navigator.clipboard.readText()"), f'{self.url}?pack={pack["id"]}')
+        self.assertIn("copied", self.page.locator("#copy-status").inner_text())
+
+    def test_shareable_urls(self):
+        self.context.grant_permissions(["clipboard-read", "clipboard-write"])
+        self.open()
+        self.page.locator('.outcome-tile[data-outcome="catch-financial-crime"]').click()
+        self.page.get_by_label("Industry", exact=True).select_option("Banking")
+        self.page.get_by_role("searchbox").fill("alerts")
+        self.assertIn("outcome=catch-financial-crime", self.page.url)
+        self.assertIn("industry=Banking", self.page.url)
+        self.assertIn("q=alerts", self.page.url)
+        self.page.get_by_role("button", name="Copy link to this view").click()
+        shared = self.page.evaluate("navigator.clipboard.readText()")
+        expected = self.page.locator("[data-pack-id]").count()
+        fresh = self.context.new_page()
+        fresh.goto(shared)
+        fresh.wait_for_function("document.querySelector('#results-status').textContent.includes('in the collection')")
+        self.assertEqual(fresh.locator("[data-pack-id]").count(), expected)
+        self.assertEqual(fresh.get_by_role("searchbox").input_value(), "alerts")
+        self.assertEqual(fresh.locator('.outcome-tile[data-outcome="catch-financial-crime"]').get_attribute("aria-pressed"), "true")
+        fresh.close()
+        pack = next(pack for pack in self.catalog if pack.get("images"))
+        deep = self.context.new_page()
+        deep.goto(f'{self.url}?pack={pack["id"]}')
+        deep.locator("#pack-dialog").wait_for(state="visible")
+        self.assertEqual(deep.locator("#drawer-title").inner_text(), pack["title"])
+        deep.close()
+        bogus = self.context.new_page()
+        placeholder = next(pack for pack in self.catalog if pack.get("workInProgress"))
+        bogus.goto(f'{self.url}?industry=<script>&outcome=nope&function=Fake&pack={placeholder["id"]}')
+        bogus.wait_for_function("document.querySelector('#results-status').textContent.includes('in the collection')")
+        self.assertEqual(bogus.locator("[data-pack-id]").count(), len(self.catalog))
+        self.assertFalse(bogus.locator("#pack-dialog").is_visible())
+        bogus.close()
+
+    def test_invalid_outcome_rejected(self):
+        pack = {**self.catalog[0], "outcome": "world-domination"}
+        self.page.route("**/packs.json", lambda route: route.fulfill(json=[pack]))
+        self.page.goto(self.url)
+        self.page.locator("#load-error").wait_for(state="visible")
 
     def test_invalid_images_rejected(self):
         published = next(pack for pack in self.catalog if pack.get("images"))

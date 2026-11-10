@@ -162,6 +162,7 @@ Not ready to build yet? Use [the proposal form](https://github.com/sfc-gh-ooral/
   "summary": "Find opportunities to reduce repeat contacts and escalations by connecting call drivers, sentiment trends, and transcript insights in one view.",
   "industry": "Financial Services",
   "function": "Operations",
+  "outcome": "serve-clients",
   "features": ["Cortex AI", "Sentiment Analysis", "Text Classification"],
   "tags": ["contact center", "calls", "customer experience"],
   "setup": "local",
@@ -186,6 +187,7 @@ Not ready to build yet? Use [the proposal form](https://github.com/sfc-gh-ooral/
 
 Optional fields:
 
+- `outcome`: the business outcome tile the pack appears under: `catch-financial-crime`, `prove-compliance`, `manage-risk`, or `serve-clients`. Required for new packs. Ask the maintainers if none fits; new outcomes are added in `app.js`.
 - `images`: 2–8 preview screenshots, each `{ "src": "assets/packs/<id>-<n>.jpg", "alt": "…" }` (`.jpg`, `.png`, or `.webp`). The `alt` text doubles as the carousel caption, so describe what the screen shows and which capability powers it. Required for new packs; at least 1 is enforced. Not allowed on work-in-progress entries.
 - `setup`: `local` (default) when the app runs in no-account mode; `snowflake` only for older listings that run solely in the reader's account. See section 4. Not allowed on work-in-progress entries.
 - `tags`: extra plain-text search terms. Feature tags are already searchable.
