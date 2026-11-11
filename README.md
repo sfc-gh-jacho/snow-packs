@@ -22,18 +22,18 @@ Snow Packs is a catalog of industry-specific Snowflake showcases and starting po
 | **Trade Surveillance** — Explainable alerts for wash trading, spoofing, front-running, and marking the close. | Capital Markets | Compliance | [View pack](https://sfc-gh-jacho.github.io/sfguide-trade-surveillance/) · [Repo](https://github.com/sfc-gh-jacho/sfguide-trade-surveillance) |
 | **AML Transaction Monitoring** — Typology alerts, risk scoring, and draft case summaries for investigator-led reviews. | Banking | Compliance | [View pack](https://sfc-gh-jacho.github.io/sfguide-aml-transaction-monitoring/) · [Repo](https://github.com/sfc-gh-jacho/sfguide-aml-transaction-monitoring) |
 | **Client Data Entitlements** — One wealth dataset for advisors, managers, compliance, and a research partner. | Wealth Management | Compliance | [View pack](https://sfc-gh-jacho.github.io/sfguide-fsi-client-entitlements/) · [Repo](https://github.com/sfc-gh-jacho/sfguide-fsi-client-entitlements) |
+| **KYC Onboarding Workbench** — Application-to-decision KYC with AI document checks, explainable risk, and fuzzy screening. | Banking | Compliance | [View pack](https://sfc-gh-jacho.github.io/sfguide-kyc-onboarding-workbench/) · [Try example](https://sfc-gh-jacho.github.io/sfguide-kyc-onboarding-workbench/try/) · [Repo](https://github.com/sfc-gh-jacho/sfguide-kyc-onboarding-workbench) |
 | **Credit Risk Monitor** — Borrower trends, concentrations, and early warning signals. | Banking | Risk | Work in progress |
 | **Liquidity & Cash Flow** — Cash positions, funding needs, and liquidity scenarios. | Banking | Finance | Work in progress |
-| **KYC & Onboarding Insights** — Documentation gaps, onboarding bottlenecks, and review queues. | Banking | Compliance | Work in progress |
 | **Payment Fraud Insights** — Suspicious payment patterns and investigation outcomes. | Payments | Risk | Work in progress |
 | **Claims Triage Insights** — Claim complexity and handling delays for adjuster-led prioritization. | Insurance | Claims | Work in progress |
 | **Underwriting Submission Review** — Submission completeness, risk context, and portfolio fit. | Insurance | Underwriting | Work in progress |
 | **Client Portfolio Review** — Holdings, concentration, and allocation drift for advisor conversations. | Wealth Management | Advisory | Work in progress |
 | **Investment Research Workbench** — Company filings, research notes, and supporting evidence. | Asset Management | Investments | Work in progress |
 
-**14 packs: 6 published examples and 8 work-in-progress concepts.** [Propose the next one](https://github.com/sfc-gh-ooral/snow-packs/issues/new?template=pack-proposal.md).
+**14 packs: 7 published examples and 7 work-in-progress concepts.** [Propose the next one](https://github.com/sfc-gh-ooral/snow-packs/issues/new?template=pack-proposal.md).
 
-The Loss Triangle and Contact Driver packs provide local synthetic-data quick starts; the Regulatory Reporting, Trade Surveillance, AML Transaction Monitoring, and Client Data Entitlements packs run a synthetic-data SQL script in your own Snowflake account and offer GitHub's **Use this template** button. None are hosted examples; the Loss Triangle and Contact Driver packs support fork/clone. The eight placeholders describe intended use cases only, without implementation claims or release dates.
+The Loss Triangle and Contact Driver packs provide local synthetic-data quick starts; the Regulatory Reporting, Trade Surveillance, AML Transaction Monitoring, and Client Data Entitlements packs run a synthetic-data SQL script in your own Snowflake account and offer GitHub's **Use this template** button. The KYC Onboarding Workbench runs in no-account mode and is the catalog's first hosted example: it opens in your browser with no install, and also deploys to Streamlit in Snowflake. The Loss Triangle and Contact Driver packs support fork/clone. The seven placeholders describe intended use cases only, without implementation claims or release dates.
 
 Packs are showcases and starting points, not production certifications. Review each pack's setup requirements, validation evidence, costs, and limitations before adapting it.
 
