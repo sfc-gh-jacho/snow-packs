@@ -52,6 +52,14 @@
     "features": ["Time Travel", "Zero-Copy Cloning", "Streams", "Access History"],
     "tags": ["regulatory reporting", "audit trail", "capital report", "filings", "undrop"],
     "setup": "snowflake",
+    "images": [
+      { "src": "assets/packs/regulatory-audit-time-travel-1.jpg", "alt": "Overview: reproduce a capital report as filed, explain what changed, and show who changed it" },
+      { "src": "assets/packs/regulatory-audit-time-travel-2.jpg", "alt": "Time Travel AT(TIMESTAMP): the report as filed next to today's numbers, by legal entity" },
+      { "src": "assets/packs/regulatory-audit-time-travel-3.jpg", "alt": "Zero-copy clone: a permanent snapshot of the filing that matches Time Travel exactly" },
+      { "src": "assets/packs/regulatory-audit-time-travel-4.jpg", "alt": "Streams: an audit log of every post-filing insert, update, and delete with old and new values" },
+      { "src": "assets/packs/regulatory-audit-time-travel-5.jpg", "alt": "Query history: who changed each row after the filing, with user, role, and statement" },
+      { "src": "assets/packs/regulatory-audit-time-travel-6.jpg", "alt": "UNDROP TABLE: a dropped table recovered instantly, with its history intact" }
+    ],
     "pagesUrl": "https://sfc-gh-jacho.github.io/sfguide-regulatory-audit-time-travel/",
     "demoUrl": "",
     "repoUrl": "https://github.com/sfc-gh-jacho/sfguide-regulatory-audit-time-travel",
@@ -100,6 +108,14 @@
     "features": ["Dynamic Tables", "Row Access Policies", "Cortex AI", "Snowflake SQL"],
     "tags": ["anti-money laundering", "financial crime", "transactions", "structuring", "alerts", "case management"],
     "setup": "snowflake",
+    "images": [
+      { "src": "assets/packs/aml-transaction-monitoring-1.jpg", "alt": "Overview: from 500,000 synthetic transactions to a prioritized, explainable alert queue" },
+      { "src": "assets/packs/aml-transaction-monitoring-2.jpg", "alt": "Structuring rule in SQL: near-threshold cash deposits found with QUALIFY, each with an explanation" },
+      { "src": "assets/packs/aml-transaction-monitoring-3.jpg", "alt": "Risk scoring in a Dynamic Table: alerts ranked 0-100 and refreshed as transactions land" },
+      { "src": "assets/packs/aml-transaction-monitoring-4.jpg", "alt": "Case investigation: every transaction behind a structuring alert, near-threshold deposits flagged" },
+      { "src": "assets/packs/aml-transaction-monitoring-5.jpg", "alt": "Row access policy: investigators see only their region's alerts; managers see both" },
+      { "src": "assets/packs/aml-transaction-monitoring-6.jpg", "alt": "Cortex AI_COMPLETE: draft case summaries shown next to the facts they used" }
+    ],
     "pagesUrl": "https://sfc-gh-jacho.github.io/sfguide-aml-transaction-monitoring/",
     "demoUrl": "",
     "repoUrl": "https://github.com/sfc-gh-jacho/sfguide-aml-transaction-monitoring",
@@ -188,6 +204,14 @@
     "features": ["MATCH_RECOGNIZE", "Dynamic Tables", "Dynamic Data Masking", "Snowflake SQL"],
     "tags": ["market abuse", "trading", "orders", "market conduct", "alerts"],
     "setup": "snowflake",
+    "images": [
+      { "src": "assets/packs/trade-surveillance-1.jpg", "alt": "Overview: explainable surveillance of 200,000 orders across four market-abuse rules" },
+      { "src": "assets/packs/trade-surveillance-2.jpg", "alt": "MATCH_RECOGNIZE: spoofing sequences found as a pattern over orders, with a plain-English explanation" },
+      { "src": "assets/packs/trade-surveillance-3.jpg", "alt": "Consolidated alert queue: 200,055 orders reduced to 12 planted cases on this synthetic data" },
+      { "src": "assets/packs/trade-surveillance-4.jpg", "alt": "Case investigation: the exact order-and-cancel timeline behind a spoofing alert" },
+      { "src": "assets/packs/trade-surveillance-5.jpg", "alt": "Dynamic Table: the alert queue refreshes itself as new orders land" },
+      { "src": "assets/packs/trade-surveillance-6.jpg", "alt": "Dynamic Data Masking: analysts see trader IDs; reviewers see consistent pseudonyms" }
+    ],
     "pagesUrl": "https://sfc-gh-jacho.github.io/sfguide-trade-surveillance/",
     "demoUrl": "",
     "repoUrl": "https://github.com/sfc-gh-jacho/sfguide-trade-surveillance",
@@ -204,6 +228,14 @@
     "features": ["Row Access Policies", "Dynamic Data Masking", "Tag-based Masking", "Aggregation Policies", "Secure Views"],
     "tags": ["entitlements", "data governance", "advisors", "client data", "privacy", "research sharing"],
     "setup": "snowflake",
+    "images": [
+      { "src": "assets/packs/client-data-entitlements-1.jpg", "alt": "Overview: one wealth dataset for advisors, branch managers, compliance, and a research partner" },
+      { "src": "assets/packs/client-data-entitlements-2.jpg", "alt": "Row access policy driven by a mapping table: 50, 100, or 300 clients visible by role" },
+      { "src": "assets/packs/client-data-entitlements-3.jpg", "alt": "Masking and banding: the same client as each role sees them, with net worth banded" },
+      { "src": "assets/packs/client-data-entitlements-4.jpg", "alt": "Tag-based masking: a newly tagged column is protected the moment it arrives" },
+      { "src": "assets/packs/client-data-entitlements-5.jpg", "alt": "Aggregation policy: row-level partner queries blocked, grouped queries of 10+ clients allowed" },
+      { "src": "assets/packs/client-data-entitlements-6.jpg", "alt": "Secure view: de-identified sector exposure for the partner, with direct table access blocked" }
+    ],
     "pagesUrl": "https://sfc-gh-jacho.github.io/sfguide-fsi-client-entitlements/",
     "demoUrl": "",
     "repoUrl": "https://github.com/sfc-gh-jacho/sfguide-fsi-client-entitlements",
