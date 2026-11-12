@@ -62,14 +62,20 @@ h1 { font-size: clamp(3.5rem, 6.7vw, 5.7rem); margin-bottom: 20px; letter-spacin
 .art-bottom i { font-style: normal; color: #8bdcfa; }
 .art-caption { position: absolute; bottom: 12px; width: 100%; text-align: center; color: var(--muted); font-size: .52rem; letter-spacing: .15em; }
 /* Hero screenshot wall: two columns of real app screens drifting in opposite directions. */
-.hero-art.has-wall { height: 460px; background: none; overflow: hidden; border-radius: 16px; }
+.hero-art.has-wall { overflow: hidden; border-radius: 16px; }
 .hero-fallback { position: absolute; inset: 0; }
-.hero-art.has-wall .hero-fallback { display: none; }
+/* app.js alternates the card art and the screenshot wall with a slow crossfade. */
+.hero-fallback, .hero-wall { transition: opacity 2.4s ease; }
+.hero-art.has-wall .hero-wall { opacity: 0; }
+.hero-art.has-wall .wall-track { animation-play-state: paused; }
+.hero-art.show-wall .hero-wall { opacity: 1; }
+.hero-art.show-wall .wall-track { animation-play-state: running; }
+.hero-art.show-wall .hero-fallback { opacity: 0; }
 .hero-wall { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; overflow: hidden; transform: rotate(-4deg) scale(1.06);
   mask-image: linear-gradient(transparent, black 14%, black 86%, transparent); -webkit-mask-image: linear-gradient(transparent, black 14%, black 86%, transparent); }
 .wall-column { overflow: hidden; }
-.wall-track { display: flex; flex-direction: column; gap: 16px; animation: wall-up 48s linear infinite; }
-.wall-track-2 { animation-name: wall-down; animation-duration: 56s; }
+.wall-track { display: flex; flex-direction: column; gap: 16px; animation: wall-up 150s linear infinite; }
+.wall-track-2 { animation-name: wall-down; animation-duration: 170s; }
 .wall-tile { margin: 0; position: relative; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); background: var(--card); box-shadow: 0 16px 34px rgba(6, 30, 50, .16); }
 .wall-tile img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; object-position: top left; }
 .wall-tile figcaption { position: absolute; left: 8px; bottom: 8px; padding: 3px 8px; border-radius: 999px; background: rgba(6, 30, 50, .78); color: #fff; font-size: .6rem; font-weight: 700; letter-spacing: .02em; }

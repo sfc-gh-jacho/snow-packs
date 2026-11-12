@@ -121,14 +121,23 @@
 
   // ---------- Hero screenshot wall ----------
 
-  // Off until there are enough varied screenshots; the original hero art shows instead.
-  const HERO_WALL = false;
+  // Set to false to show only the original hero art.
+  const HERO_WALL = true;
+  const WALL_FIRST_MS = 2500;  // card art on arrival
+  const WALL_SHOW_MS = 14000;  // screenshot wall
+  const WALL_ART_MS = 8000;    // card art between rounds
 
   function buildHeroWall() {
     const wall = document.querySelector("#hero-wall");
-    const shots = packs.filter(pack => !pack.workInProgress && pack.images)
-      .flatMap(pack => pack.images.map(image => ({ ...image, title: pack.title })));
-    if (shots.length < 4) {
+    // Deal one screenshot per pack in turn so neighbouring tiles come from different packs.
+    const sources = packs.filter(pack => !pack.workInProgress && pack.images)
+      .sort((a, b) => b.images.length - a.images.length);
+    const shots = [];
+    for (let i = 0; i < Math.max(0, ...sources.map(pack => pack.images.length)); i++) {
+      for (const pack of sources) if (pack.images[i]) shots.push({ ...pack.images[i], title: pack.title });
+    }
+    // With reduced motion the card art stays put.
+    if (shots.length < 4 || matchMedia("(prefers-reduced-motion: reduce)").matches) {
       wall.hidden = true;
       return;
     }
@@ -152,7 +161,14 @@
       return column_;
     }));
     wall.hidden = false;
-    wall.parentElement.classList.add("has-wall");
+    const art = wall.parentElement;
+    art.classList.add("has-wall");
+    // Card art first, then the wall, alternating with a crossfade.
+    const cycle = showWall => {
+      art.classList.toggle("show-wall", showWall);
+      setTimeout(() => cycle(!showWall), showWall ? WALL_SHOW_MS : WALL_ART_MS);
+    };
+    setTimeout(() => cycle(true), WALL_FIRST_MS);
   }
 
   // ---------- Outcome tiles and filters ----------

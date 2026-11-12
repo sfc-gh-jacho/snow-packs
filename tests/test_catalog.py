@@ -311,11 +311,36 @@ class CatalogTests(unittest.TestCase):
         finally:
             context.close()
 
-    def test_hero_shows_original_art_while_wall_is_off(self):
+    def test_hero_wall_crossfades_on_a_schedule(self):
         self.open()
-        self.assertFalse(self.page.locator("#hero-wall").is_visible())
-        self.assertEqual(self.page.locator("#hero-wall img").count(), 0)
+        art, wall = self.page.locator(".hero-art"), self.page.locator("#hero-wall")
+        opacity = lambda selector: self.page.locator(selector).evaluate("node => getComputedStyle(node).opacity")
+        self.assertEqual(art.get_attribute("aria-hidden"), "true")
+        shots = sum(len(pack.get("images", [])) for pack in self.catalog if not pack.get("workInProgress"))
+        self.assertEqual(wall.locator("img").count(), shots * 2)  # each column repeats once for the loop
+        captions = wall.locator(".wall-track-1 figcaption").all_text_contents()[:4]
+        self.assertEqual(len(set(captions)), 4)  # neighbouring tiles come from different packs
+        self.assertEqual(opacity(".hero-fallback"), "1")  # card art first
+        self.assertFalse("show-wall" in art.get_attribute("class"))
+        self.page.wait_for_function("document.querySelector('.hero-art').classList.contains('show-wall')", timeout=5000)
+        self.page.wait_for_function("getComputedStyle(document.querySelector('#hero-wall')).opacity === '1'")
+        self.page.wait_for_function("!document.querySelector('.hero-art').classList.contains('show-wall')", timeout=17000)
+
+    def test_hero_keeps_card_art_with_reduced_motion_or_without_screenshots(self):
+        self.page.emulate_media(reduced_motion="reduce")
+        self.open()
+        self.assertTrue(self.page.locator("#hero-wall").is_hidden())
         self.assertTrue(self.page.locator(".hero-fallback").is_visible())
+        self.page.emulate_media(reduced_motion="no-preference")
+        self.page.route("**/packs.json", lambda route: route.fulfill(json=[{k: v for k, v in pack.items() if k != "images"} for pack in self.catalog]))
+        self.open()
+        self.assertTrue(self.page.locator("#hero-wall").is_hidden())
+        self.assertTrue(self.page.locator(".hero-fallback").is_visible())
+
+    def test_featured_packs_lead_the_grid(self):
+        self.open()
+        order = self.page.locator("#pack-grid [data-pack-id]").evaluate_all("nodes => nodes.map(n => n.dataset.packId)")
+        self.assertEqual(order[:3], ["kyc-onboarding-workbench", "loss-triangle-suite", "contact-driver-analytics"])
 
     def test_industry_bands_on_every_card(self):
         self.open()
