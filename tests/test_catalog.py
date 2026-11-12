@@ -370,7 +370,8 @@ class CatalogTests(unittest.TestCase):
         self.assertIn(f'pack={pack["id"]}', self.page.url)
         self.page.keyboard.press("Escape")
         dialog.wait_for(state="hidden")
-        self.assertNotIn("pack=", self.page.url)
+        # The dialog's close event (which clears ?pack=) fires just after it hides.
+        self.page.wait_for_function("!location.search.includes('pack=')")
         self.assertTrue(trigger.evaluate("node => node === document.activeElement"))
         card.get_by_role("button", name=f'{pack["title"]} details').click()
         dialog.wait_for(state="visible")
