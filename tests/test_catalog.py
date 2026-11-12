@@ -198,7 +198,7 @@ class CatalogTests(unittest.TestCase):
             self.assertNotIn(phrase, copy)
         for heading in ["See what could change.", "Try it with sample data.", "Make it work for you."]:
             self.assertTrue(self.page.get_by_role("heading", name=heading, exact=True).is_visible())
-        self.assertEqual(self.page.get_by_role("navigation").get_by_role("link").count(), 1)
+        self.assertEqual(self.page.get_by_role("navigation").count(), 0)
         self.assertEqual(self.page.locator(".repo-link").count(), sum(not pack.get("workInProgress") for pack in self.catalog))
         self.assertEqual(self.page.locator('[data-pack-id="snow-owl"], a[href*="snow-owl"], a[href*="effective-adventure"]').count(), 0)
 
@@ -236,7 +236,7 @@ class CatalogTests(unittest.TestCase):
         self.assertNotIn("latest pack review", self.page.locator("body").inner_text().lower())
         for toggle in self.page.locator(".preview-toggle").all():
             self.assertEqual(" ".join(toggle.inner_text().split()), "▶ Preview")
-            self.assertTrue(toggle.evaluate("node => node.parentElement.classList.contains('card-top')"))
+            self.assertTrue(toggle.evaluate("node => node.closest('.card-top') !== null"))
         for scheme in ["light", "dark"]:
             self.page.emulate_media(color_scheme=scheme)
             published = self.page.locator(".available-card").first
@@ -337,6 +337,15 @@ class CatalogTests(unittest.TestCase):
         self.assertTrue(self.page.locator("#hero-wall").is_hidden())
         self.assertTrue(self.page.locator(".hero-fallback").is_visible())
 
+    def test_try_example_sits_with_preview_and_hero_is_lean(self):
+        self.open()
+        for pack in [p for p in self.catalog if p.get("demoUrl")]:
+            top = self.page.locator(f'[data-pack-id="{pack["id"]}"] .card-top')
+            self.assertEqual(top.get_by_role("link", name=f'Try {pack["title"]} example').get_attribute("href"), pack["demoUrl"])
+            self.assertEqual(self.page.locator(f'[data-pack-id="{pack["id"]}"] .card-actions').get_by_text("Try example").count(), 0)
+        self.assertEqual(self.page.locator("header nav").count(), 0)
+        self.assertEqual(self.page.locator(".hero-footnote").count(), 0)
+
     def test_featured_packs_lead_the_grid(self):
         self.open()
         order = self.page.locator("#pack-grid [data-pack-id]").evaluate_all("nodes => nodes.map(n => n.dataset.packId)")
@@ -359,8 +368,8 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(tiles.count(), 4)
         crime = self.page.locator('.outcome-tile[data-outcome="catch-financial-crime"]')
         expected = [pack for pack in self.catalog if pack.get("outcome") == "catch-financial-crime"]
-        ready = sum(not pack.get("workInProgress") for pack in expected)
-        self.assertIn(f"{ready} to explore", crime.inner_text())
+        self.assertEqual(self.page.locator(".outcome-count").count(), 0)
+        self.assertNotIn("explore", crime.inner_text().lower())
         crime.click()
         self.assertEqual(crime.get_attribute("aria-pressed"), "true")
         self.count(len(expected))

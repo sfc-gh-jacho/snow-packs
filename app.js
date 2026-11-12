@@ -175,16 +175,13 @@
 
   function buildOutcomes() {
     outcomeTiles.replaceChildren(...OUTCOMES.map(outcome => {
-      const members = packs.filter(pack => pack.outcome === outcome.id);
-      const ready = members.filter(pack => !pack.workInProgress).length;
       const tile = element("button", "outcome-tile");
       tile.type = "button";
       tile.dataset.outcome = outcome.id;
       tile.setAttribute("aria-pressed", String(selection.outcome === outcome.id));
       const text = element("span", "outcome-text");
       text.append(element("strong", "", outcome.title), element("span", "outcome-blurb", outcome.blurb));
-      const count = element("span", "outcome-count", ready ? `${ready} to explore${members.length > ready ? ` · ${members.length - ready} planned` : ""}` : `${members.length} planned`);
-      tile.append(icon(outcome.icon, "outcome-icon"), text, count);
+      tile.append(icon(outcome.icon, "outcome-icon"), text);
       tile.addEventListener("click", () => {
         selection.outcome = selection.outcome === outcome.id ? "" : outcome.id;
         updateChips();
@@ -256,7 +253,10 @@
     titleButton.setAttribute("aria-haspopup", "dialog");
     titleButton.addEventListener("click", () => openDetails(pack.id, titleButton));
     heading.append(titleButton);
-    if (pack.images) badges.append(previewToggle(pack, card));
+    const quick = element("span", "card-quick");
+    if (pack.demoUrl) quick.append(link("▶ Try example", pack.demoUrl, "try-link", `Try ${pack.title} example${internal ? "; employee sign-in required" : ""}`));
+    if (pack.images) quick.append(previewToggle(pack, card));
+    if (quick.childElementCount) badges.append(quick);
     if (internal) card.append(element("p", "access-note", "Internal · Snowflake employees only"));
     const features = element("ul", "feature-tags");
     features.setAttribute("aria-label", "Snowflake features and capabilities");
@@ -265,7 +265,6 @@
     const actions = element("div", "card-actions");
     const accessLabel = internal ? "; employee sign-in required" : "";
     actions.append(link("View pack ↗", pack.pagesUrl, "button primary", `View ${pack.title}${accessLabel}`));
-    if (pack.demoUrl) actions.append(link("Try example", pack.demoUrl, "button secondary", `Try ${pack.title} example${accessLabel}`));
     const details = element("button", "details-link", "Details");
     details.type = "button";
     details.setAttribute("aria-haspopup", "dialog");

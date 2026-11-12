@@ -40,7 +40,7 @@
       { "src": "assets/packs/loss-triangle-suite-5.jpg", "alt": "Consistency testing that applies uniform selection rules across triangles" }
     ],
     "pagesUrl": "https://sfc-gh-ooral.github.io/sfguide-loss-triangle-analysis/",
-    "demoUrl": "",
+    "demoUrl": "https://sfc-gh-ooral.github.io/sfguide-loss-triangle-analysis/try/",
     "repoUrl": "https://github.com/sfc-gh-ooral/sfguide-loss-triangle-analysis",
     "author": "Oz Oral",
     "updated": "2026-10"
@@ -61,7 +61,7 @@
       { "src": "assets/packs/contact-driver-analytics-4.jpg", "alt": "Transcript explorer with sentiment score, AI summary, and the full conversation" }
     ],
     "pagesUrl": "https://sfc-gh-ooral.github.io/sfguide-contact-driver-analytics/",
-    "demoUrl": "",
+    "demoUrl": "https://sfc-gh-ooral.github.io/sfguide-contact-driver-analytics/try/",
     "repoUrl": "https://github.com/sfc-gh-ooral/sfguide-contact-driver-analytics",
     "author": "Oz Oral",
     "updated": "2026-10"
