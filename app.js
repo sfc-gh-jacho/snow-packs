@@ -47,7 +47,10 @@
   function link(text, url, className, accessibleLabel) {
     const node = element("a", className, text);
     node.href = url;
-    if (accessibleLabel) node.setAttribute("aria-label", accessibleLabel);
+    // Every catalog link leaves the site, so it opens in a new tab and says so to screen readers.
+    node.target = "_blank";
+    node.rel = "noopener noreferrer";
+    node.setAttribute("aria-label", `${accessibleLabel || text.replace(/[↗▶]/g, "").trim()} (opens in a new tab)`);
     return node;
   }
 
@@ -254,8 +257,9 @@
     titleButton.addEventListener("click", () => openDetails(pack.id, titleButton));
     heading.append(titleButton);
     const quick = element("span", "card-quick");
-    if (pack.demoUrl) quick.append(link("▶ Try example", pack.demoUrl, "try-link", `Try ${pack.title} example${internal ? "; employee sign-in required" : ""}`));
-    if (pack.images) quick.append(previewToggle(pack, card));
+    // A hosted app beats screenshots: cards with one show Try it! instead of Preview.
+    if (pack.demoUrl) quick.append(link("▶ Try it!", pack.demoUrl, "try-link", `Try ${pack.title}${internal ? "; employee sign-in required" : ""}`));
+    else if (pack.images) quick.append(previewToggle(pack, card));
     if (quick.childElementCount) badges.append(quick);
     if (internal) card.append(element("p", "access-note", "Internal · Snowflake employees only"));
     const features = element("ul", "feature-tags");
@@ -508,7 +512,9 @@
     const features = element("ul", "feature-tags");
     pack.features.forEach(feature => features.append(element("li", "", feature)));
     parts.push(section("Snowflake capabilities", features));
-    const runs = pack.setup === "snowflake"
+    const runs = pack.demoUrl
+      ? "Opens in your browser on synthetic data, with no account or install. To run it in your own Snowflake account, follow the repository's deploy steps."
+      : pack.setup === "snowflake"
       ? "Runs in your own Snowflake account on synthetic data, using the guide's SQL script. Review permissions and costs first."
       : "Runs on bundled sample data without a Snowflake account. Follow the Quick Start in the repository.";
     parts.push(section("Try it", element("p", "", runs)));
@@ -516,8 +522,9 @@
     prompt.textContent = cocoPrompt(pack);
     parts.push(section("Make it yours with Cortex Code", element("p", "", "Open Cortex Code and paste this prompt to get started:"), prompt, copyButton("Copy prompt", () => cocoPrompt(pack))));
     const actions = element("div", "drawer-actions");
+    if (pack.demoUrl) actions.append(link("▶ Try it!", pack.demoUrl, "button primary", `Try ${pack.title}`));
     actions.append(
-      link("View pack ↗", pack.pagesUrl, "button primary", `View ${pack.title}`),
+      link("View pack ↗", pack.pagesUrl, pack.demoUrl ? "button secondary" : "button primary", `View ${pack.title}`),
       link("View code ↗", pack.repoUrl, "button secondary", `${pack.title} repository`),
       copyButton("Copy link", () => shareUrl({ pack: pack.id }), "button secondary"),
     );
