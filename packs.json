@@ -107,20 +107,28 @@
     "updated": "2026-11"
   },
   {
-    "id": "kyc-onboarding-insights",
-    "title": "KYC & Onboarding Insights",
-    "summary": "A planned exploration of onboarding bottlenecks, missing documentation, and review queues to support customer due diligence.",
+    "id": "kyc-onboarding-workbench",
+    "title": "KYC Onboarding Workbench",
+    "summary": "Help compliance teams take each new customer from application to decision in one place, with AI-read identity documents, explainable risk scores, fuzzy watchlist screening, and an audit-ready decision trail.",
     "industry": "Banking",
     "function": "Compliance",
     "outcome": "catch-financial-crime",
-    "workInProgress": true,
-    "features": [],
-    "tags": ["know your customer", "due diligence", "onboarding"],
-    "pagesUrl": "",
-    "demoUrl": "",
-    "repoUrl": "",
-    "author": "Snow Packs",
-    "updated": "2026-10"
+    "features": ["Streamlit in Snowflake", "Cortex AI_EXTRACT", "Cortex AI_COMPLETE", "JAROWINKLER_SIMILARITY", "Dynamic Data Masking", "Row Access Policies"],
+    "tags": ["know your customer", "due diligence", "onboarding", "sanctions screening", "identity verification", "PEP"],
+    "setup": "local",
+    "images": [
+      { "src": "assets/packs/kyc-onboarding-workbench-1.jpg", "alt": "Overview: onboarding KPIs, daily applications by status, and the open work queue on synthetic data" },
+      { "src": "assets/packs/kyc-onboarding-workbench-2.jpg", "alt": "Identity check: Cortex AI_EXTRACT reads a synthetic license and flags a surname mismatch with the application" },
+      { "src": "assets/packs/kyc-onboarding-workbench-3.jpg", "alt": "Explainable risk score: each point traced to a named factor, with what-if weights for the whole book" },
+      { "src": "assets/packs/kyc-onboarding-workbench-4.jpg", "alt": "Screening: JAROWINKLER_SIMILARITY matches against sanctions, PEP, and adverse-media lists, with corroborating fields" },
+      { "src": "assets/packs/kyc-onboarding-workbench-5.jpg", "alt": "Analyst decision: a Cortex AI_COMPLETE case summary grounded in the case facts, next to the open alerts" },
+      { "src": "assets/packs/kyc-onboarding-workbench-6.jpg", "alt": "Governance: the same applicant records viewed as an auditor, with masking applied to tax IDs, birth dates, and document numbers" }
+    ],
+    "pagesUrl": "https://sfc-gh-jacho.github.io/sfguide-kyc-onboarding-workbench/",
+    "demoUrl": "https://sfc-gh-jacho.github.io/sfguide-kyc-onboarding-workbench/try/",
+    "repoUrl": "https://github.com/sfc-gh-jacho/sfguide-kyc-onboarding-workbench",
+    "author": "Janet Cho",
+    "updated": "2026-11"
   },
   {
     "id": "payment-fraud-insights",
