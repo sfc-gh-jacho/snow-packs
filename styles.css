@@ -128,7 +128,8 @@ input::placeholder { color: var(--muted); opacity: 1; }
 .pack-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
 .pack-card { display: flex; flex-direction: column; min-width: 0; background: var(--card); padding: 26px; border-radius: 12px; border: 1px solid var(--line); box-shadow: var(--shadow); position: relative; }
 .pack-card::before { content: ""; width: 34px; height: 3px; background: var(--blue); position: absolute; top: -1px; left: 26px; border-radius: 3px; }
-.card-top { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 22px; }
+.card-top { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 22px; }
+.card-badges { display: flex; flex-wrap: wrap; gap: 6px; min-width: 0; }
 .badge { font-size: .61rem; font-weight: 650; background: var(--tag); color: var(--accent); border-radius: 4px; padding: 4px 7px; }
 .function-badge { background: var(--surface); color: var(--muted); }
 .pack-card h3 { font-size: 1.5rem; margin-bottom: 14px; }
@@ -163,7 +164,10 @@ a.owner-name { text-decoration: underline; text-underline-offset: 2px; }
 .title-button:hover { color: var(--accent); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 5px; }
 .details-link { padding: 10px 8px; border: 0; background: none; color: var(--accent); font-size: .75rem; font-weight: 650; text-decoration: underline; text-underline-offset: 4px; }
 .available-card .card-actions .primary { flex: 1 1 auto; }
-.card-quick { margin-left: auto; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
+/* Try it! / Preview sit in the top-right of the coloured band, so they never compete with the badges for room. */
+.card-quick { position: absolute; top: 18px; right: 18px; z-index: 2; display: flex; gap: 6px; }
+.card-quick .preview-toggle, .card-quick .try-link { color: #fff; border-color: rgba(255, 255, 255, .8); background: rgba(6, 27, 46, .32); }
+.card-quick .preview-toggle:hover, .card-quick .try-link:hover, .card-quick .preview-toggle[aria-expanded="true"] { background: rgba(6, 27, 46, .55); }
 .try-link { text-decoration: none; }
 .preview-toggle, .try-link { display: inline-flex; align-items: center; gap: 6px; min-height: 30px; padding: 4px 11px; border: 1px solid var(--accent); border-radius: 4px; background: transparent; color: var(--accent); font-size: .75rem; font-weight: 750; letter-spacing: .04em; }
 .preview-toggle:hover, .try-link:hover, .preview-toggle[aria-expanded="true"] { background: var(--tag); }

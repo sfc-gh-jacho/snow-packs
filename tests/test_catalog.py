@@ -548,6 +548,15 @@ class CatalogTests(unittest.TestCase):
                 self.count(0)
                 self.page.unroute("**/packs.json")
 
+    def test_published_card_titles_line_up(self):
+        # Try it! and Preview sit on the colour band, so long badges never push a title down.
+        for width in [1440, 1100, 375]:
+            with self.subTest(width=width):
+                self.page.set_viewport_size({"width": width, "height": 1000})
+                self.open()
+                offsets = self.page.evaluate("() => [...document.querySelectorAll('.available-card')].map(card => Math.round(card.querySelector('h3').getBoundingClientRect().top - card.getBoundingClientRect().top))")
+                self.assertEqual(len(set(offsets)), 1, offsets)
+
     def test_readme_catalog_matches_json(self):
         readme = (ROOT / "README.md").read_text()
         for pack in self.catalog:

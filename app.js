@@ -282,7 +282,9 @@
     const headingId = `pack-${pack.id}`;
     card.setAttribute("aria-labelledby", headingId);
     const badges = element("div", "card-top");
-    badges.append(element("span", "badge", pack.industry), element("span", "badge function-badge", pack.function));
+    const labels = element("span", "card-badges");
+    labels.append(element("span", "badge", pack.industry), element("span", "badge function-badge", pack.function));
+    badges.append(labels);
     const heading = element("h3");
     heading.id = headingId;
     card.append(industryBand(pack), badges, heading, element("p", "pack-summary", pack.summary));
@@ -543,7 +545,9 @@
   function renderDetails(pack) {
     const outcome = OUTCOMES.find(item => item.id === pack.outcome);
     const badges = element("div", "card-top");
-    badges.append(element("span", "badge", pack.industry), element("span", "badge function-badge", pack.function));
+    const labels = element("span", "card-badges");
+    labels.append(element("span", "badge", pack.industry), element("span", "badge function-badge", pack.function));
+    badges.append(labels);
     const title = element("h2", "drawer-title", pack.title);
     title.id = "drawer-title";
     const parts = [industryBand(pack, "drawer-visual"), badges, title, element("p", "drawer-summary", pack.summary)];
