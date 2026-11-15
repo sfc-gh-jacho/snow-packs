@@ -138,6 +138,15 @@ input::placeholder { color: var(--muted); opacity: 1; }
 .card-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: auto; border-top: 1px solid var(--line); padding-top: 16px; }
 .card-actions .button { font-size: .73rem; padding: 10px 12px; gap: 8px; }
 .repo-link { padding: 10px; font-size: .75rem; font-weight: 650; }
+.pack-owner, .drawer-owner { font-size: .74rem; color: var(--muted); margin: -12px 0 18px; }
+.owner-name { font-weight: 650; color: var(--accent); }
+a.owner-name { text-decoration: underline; text-underline-offset: 2px; }
+.contributors { margin-top: 32px; padding-top: 22px; border-top: 1px solid var(--line); }
+.contributors h3 { font-size: 1.05rem; margin-bottom: 4px; }
+.contributors p { font-size: .76rem; margin-bottom: 14px; }
+.contributors ul { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 0; }
+.contributor { display: flex; gap: 8px; align-items: baseline; font-size: .78rem; border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; background: var(--card); }
+.contributor-count { font-size: .68rem; color: var(--muted); }
 .access-note { color: var(--accent); font-size: .72rem; font-weight: 650; margin-bottom: 16px; }
 .example-note { font-size: .68rem; margin: 12px 0 0; }
 .available-card { border-color: var(--accent); }

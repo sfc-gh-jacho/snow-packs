@@ -96,6 +96,48 @@
     }
   }
 
+  // Owner links are limited to LinkedIn profiles so catalog JSON can't send readers anywhere else.
+  function isLinkedInProfile(value) {
+    return typeof value === "string" && /^https:\/\/(www\.)?linkedin\.com\/in\/[A-Za-z0-9_-]{3,100}\/?$/.test(value);
+  }
+
+  // Published packs credit their owner; placeholders and the catalog's own entries don't.
+  function hasOwner(pack) {
+    return !pack.workInProgress && pack.author !== "Snow Packs";
+  }
+
+  function ownerName(pack) {
+    if (!pack.authorUrl) return element("span", "owner-name", pack.author);
+    return link(pack.author, pack.authorUrl, "owner-name", `${pack.author} on LinkedIn`);
+  }
+
+  function byline(pack, className) {
+    const node = element("p", className, "By ");
+    node.append(ownerName(pack));
+    return node;
+  }
+
+  function buildContributors() {
+    const strip = document.querySelector("#contributors");
+    const people = new Map();
+    packs.filter(hasOwner).forEach(pack => {
+      const person = people.get(pack.author) || { pack, count: 0 };
+      person.count += 1;
+      if (!person.pack.authorUrl && pack.authorUrl) person.pack = pack;
+      people.set(pack.author, person);
+    });
+    const list = strip.querySelector("ul");
+    list.replaceChildren();
+    [...people.values()]
+      .sort((a, b) => b.count - a.count || a.pack.author.localeCompare(b.pack.author))
+      .forEach(({ pack, count }) => {
+        const item = element("li", "contributor");
+        item.append(ownerName(pack), element("span", "contributor-count", `${count} ${count === 1 ? "pack" : "packs"}`));
+        list.append(item);
+      });
+    strip.hidden = !people.size;
+  }
+
   function validateCatalog(data) {
     if (!Array.isArray(data)) throw new Error("Catalog must be an array.");
     const ids = new Set();
@@ -116,6 +158,7 @@
       if (pack.setup !== undefined && !(!placeholder && ["local", "snowflake"].includes(pack.setup))) throw new Error("Invalid setup mode.");
       if (pack.outcome !== undefined && !outcomeIds.has(pack.outcome)) throw new Error("Invalid outcome.");
       if (pack.images !== undefined && (placeholder || !Array.isArray(pack.images) || !pack.images.length || pack.images.length > 8 || pack.images.some(image => !image || typeof image.src !== "string" || !/^assets\/packs\/[a-z0-9-]+\.(jpg|png|webp)$/.test(image.src) || typeof image.alt !== "string" || !image.alt.trim()))) throw new Error("Invalid pack images.");
+      if (pack.authorUrl !== undefined && (placeholder || !isLinkedInProfile(pack.authorUrl))) throw new Error("Owner links must be a LinkedIn profile URL.");
       if (pack.access !== undefined && !["public", "internal"].includes(pack.access)) throw new Error("Invalid access label.");
       ids.add(pack.id);
     }
@@ -261,6 +304,7 @@
     if (pack.demoUrl) quick.append(link("▶ Try it!", pack.demoUrl, "try-link", `Try ${pack.title}${internal ? "; employee sign-in required" : ""}`));
     if (pack.images) quick.append(previewToggle(pack, card));
     if (quick.childElementCount) badges.append(quick);
+    if (hasOwner(pack)) card.append(byline(pack, "pack-owner"));
     if (internal) card.append(element("p", "access-note", "Internal · Snowflake employees only"));
     const features = element("ul", "feature-tags");
     features.setAttribute("aria-label", "Snowflake features and capabilities");
@@ -503,6 +547,7 @@
     const title = element("h2", "drawer-title", pack.title);
     title.id = "drawer-title";
     const parts = [industryBand(pack, "drawer-visual"), badges, title, element("p", "drawer-summary", pack.summary)];
+    if (hasOwner(pack)) parts.push(byline(pack, "drawer-owner"));
     if (outcome) {
       const chip = element("p", "drawer-outcome");
       chip.append(icon(outcome.icon, "outcome-icon"), outcome.title);
@@ -638,6 +683,7 @@
       buildOutcomes();
       buildFilters();
       render();
+      buildContributors();
       search.disabled = false;
       document.querySelector("#reset-filters").disabled = false;
       document.querySelector("#copy-view").disabled = false;

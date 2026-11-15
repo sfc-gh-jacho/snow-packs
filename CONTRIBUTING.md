@@ -183,10 +183,11 @@ Not ready to build yet? Use [the proposal form](https://github.com/sfc-gh-ooral/
 - `features`: a nonempty list of capabilities you verified.
 - `pagesUrl`, `repoUrl`: verified, permanent HTTPS URLs. Never use authentication nonces or expiring signed URLs.
 - `demoUrl`: a hosted, no-install example if one exists; otherwise an empty string, and the card points readers to the repository. Don't put local-server addresses or setup instructions here.
-- `author`, `updated`: the owner and `YYYY-MM` of the latest review, matching the README.
+- `author`, `updated`: the owner and `YYYY-MM` of the latest review, matching the README. Published cards show the owner as **By Your Name**, and every owner appears in the **Built by** strip under the catalog.
 
 Optional fields:
 
+- `authorUrl`: optional link for your name on the card, e.g. `https://www.linkedin.com/in/your-handle`. Only LinkedIn profile URLs are accepted. Add only your own profile. Not allowed on work-in-progress entries.
 - `outcome`: the business outcome tile the pack appears under: `catch-financial-crime`, `prove-compliance`, `manage-risk`, or `serve-clients`. Required for new packs. Ask the maintainers if none fits; new outcomes are added in `app.js`.
 - `images`: 2–8 preview screenshots, each `{ "src": "assets/packs/<id>-<n>.jpg", "alt": "…" }` (`.jpg`, `.png`, or `.webp`). The `alt` text doubles as the carousel caption, so describe what the screen shows and which capability powers it. Required for new packs; at least 1 is enforced. Not allowed on work-in-progress entries.
 - `setup`: `local` (default) when the app runs in no-account mode; `snowflake` only for older listings that run solely in the reader's account. See section 4. Not allowed on work-in-progress entries.

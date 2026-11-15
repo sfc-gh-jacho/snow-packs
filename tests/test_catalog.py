@@ -210,16 +210,16 @@ class CatalogTests(unittest.TestCase):
             self.assertNotIn("maturity", pack)
 
     def test_placeholder_catalog_and_search(self):
-        self.assertEqual(len(self.catalog), 14)
+        self.assertEqual(len(self.catalog), 17)
         placeholders = [pack for pack in self.catalog if pack.get("workInProgress")]
-        self.assertEqual(len(placeholders), 5)
+        self.assertEqual(len(placeholders), 8)
         for pack in placeholders:
             self.assertEqual(pack["features"], [])
             self.assertTrue(all(pack[key] == "" for key in ["pagesUrl", "repoUrl", "demoUrl"]))
         self.open()
-        self.assertEqual(self.page.locator(".pack-card").count(), 14)
-        self.assertEqual(self.page.locator(".wip-label").count(), 5)
-        self.assertIn("5 work in progress", self.page.locator("#results-status").inner_text())
+        self.assertEqual(self.page.locator(".pack-card").count(), 17)
+        self.assertEqual(self.page.locator(".wip-label").count(), 8)
+        self.assertIn("8 work in progress", self.page.locator("#results-status").inner_text())
         self.page.get_by_role("searchbox").fill("claims triage")
         self.count(1)
         self.assertTrue(self.page.get_by_role("heading", name="Claims Triage Insights").is_visible())
@@ -501,6 +501,47 @@ class CatalogTests(unittest.TestCase):
         ]
         for pack in invalid:
             with self.subTest(pack=pack):
+                self.page.route("**/packs.json", lambda route, _request, payload=pack: route.fulfill(json=[payload]))
+                self.page.goto(self.url)
+                self.page.locator("#load-error").wait_for(state="visible")
+                self.count(0)
+                self.page.unroute("**/packs.json")
+
+    def test_owner_bylines_and_contributors(self):
+        published = [p for p in self.catalog if not p.get("workInProgress") and p["author"] != "Snow Packs"]
+        self.open()
+        self.assertEqual(self.page.locator(".pack-owner").count(), len(published))
+        self.assertEqual(self.page.locator(".wip-card .pack-owner").count(), 0)
+        card = self.page.locator(f'[data-pack-id="{published[0]["id"]}"]')
+        self.assertEqual(card.locator(".pack-owner").inner_text(), f'By {published[0]["author"]}')
+        people = {p["author"] for p in published}
+        self.assertEqual(self.page.locator("#contributors .contributor").count(), len(people))
+        self.assertTrue(self.page.locator("#contributors").is_visible())
+        # A LinkedIn URL turns the name into a new-tab link on the card, drawer, and strip.
+        pack = {**published[0], "authorUrl": "https://www.linkedin.com/in/example-owner"}
+        self.page.route("**/packs.json", lambda route: route.fulfill(json=[pack]))
+        self.page.goto(self.url)
+        name = self.page.locator(".pack-owner a.owner-name")
+        name.wait_for()
+        self.assertEqual(name.get_attribute("href"), pack["authorUrl"])
+        self.assertEqual(name.get_attribute("target"), "_blank")
+        self.assertIn("noopener", name.get_attribute("rel"))
+        self.assertEqual(self.page.locator("#contributors a.owner-name").count(), 1)
+        self.page.locator(".title-button").first.click()
+        self.assertTrue(self.page.locator(".drawer-owner a.owner-name").is_visible())
+
+    def test_invalid_owner_links_rejected(self):
+        published = next(p for p in self.catalog if not p.get("workInProgress"))
+        placeholder = next(p for p in self.catalog if p.get("workInProgress"))
+        invalid = [
+            {**published, "authorUrl": "https://example.com/in/someone"},
+            {**published, "authorUrl": "javascript:alert(1)"},
+            {**published, "authorUrl": "http://www.linkedin.com/in/someone"},
+            {**published, "authorUrl": "https://www.linkedin.com.evil.io/in/someone"},
+            {**placeholder, "authorUrl": "https://www.linkedin.com/in/someone"},
+        ]
+        for pack in invalid:
+            with self.subTest(url=pack["authorUrl"]):
                 self.page.route("**/packs.json", lambda route, _request, payload=pack: route.fulfill(json=[payload]))
                 self.page.goto(self.url)
                 self.page.locator("#load-error").wait_for(state="visible")
