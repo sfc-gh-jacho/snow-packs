@@ -79,7 +79,7 @@ The app is what customers remember. Build an experience for the people who would
   - A **local web app** (e.g., React or another framework) that also connects to Snowflake.
   - **Streamlit in Snowflake**, or an app on **Snowpark Container Services**.
   - A **Cortex Agent** or **Cortex Analyst** chat experience inside an app.
-- **Must:** A **no-account mode**: the app runs on bundled synthetic data with **no Snowflake account, credentials, or installs beyond the README's quick start**. Set `setup` to `local` in the catalog entry. A hosted static version on GitHub Pages is even better; put its URL in `demoUrl` so the card shows **Try example**.
+- **Must:** A **no-account mode**: the app runs on bundled synthetic data with **no Snowflake account, credentials, or installs beyond the README's quick start**. Set `setup` to `local` in the catalog entry. A hosted static version on GitHub Pages is even better; put its URL in `demoUrl` so the card shows **Try it!**. A working example replaces the card's screenshot **Preview**; the screenshots still appear in the pack's details and in the site's header.
 - **Must:** In no-account mode, clearly label anything simulated, such as "Sample AI response" for mocked Cortex output versus live inference.
 - **Must:** A **live mode** that runs the same app against Snowflake on synthetic data, so readers can see the real capabilities and adapt it to their own data.
 - **Should:** Make the Snowflake capability visible in the UI, e.g., a small "Powered by Cortex Agents" or "Row access policy applied" badge on the component that uses it.
@@ -152,7 +152,7 @@ Then ask CoCo to run the app, click through the workflow, and capture the screen
 
 1. Fork this repository and create a branch.
 2. Add one object to [`packs.json`](packs.json) using the schema below.
-3. Add **2 to 8 card preview screenshots** of your app's key screens (main dashboard first), saved as `assets/packs/<id>-1.jpg`, `<id>-2.jpg`, and so on: 16:10, 960×600, ideally under 100 KB each. A capture script can write these for you. Readers see them in a carousel when they hover or tap **Preview app** on your card. They live in this repository, not yours, so the catalog never loads outside images.
+3. Add **2 to 8 card preview screenshots** of your app's key screens (main dashboard first), saved as `assets/packs/<id>-1.jpg`, `<id>-2.jpg`, and so on: 16:10, 960×600, ideally under 100 KB each. A capture script can write these for you. Readers see them in a carousel when they hover or tap **Preview** on your card (cards with a `demoUrl` show **Try it!** instead) and in the pack's details. They live in this repository, not yours, so the catalog never loads outside images.
 4. Add one matching row to the **Catalog** table in [`README.md`](README.md).
 5. Serve this site locally with `python3 -m http.server 8000 --bind 127.0.0.1`. Check search, filters, empty results, keyboard navigation, narrow layout, and both color schemes.
 6. Open a pull request, complete the checklist, and note any skipped **Should** items or limitations.
