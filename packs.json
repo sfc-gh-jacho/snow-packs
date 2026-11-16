@@ -30,20 +30,20 @@
     "industry": "Insurance",
     "function": "Finance",
     "outcome": "manage-risk",
-    "features": ["Cortex Agents", "Cortex Analyst", "Semantic Views", "Snowflake SQL"],
+    "features": ["Cortex Agents", "Cortex Analyst", "Semantic Views", "Cortex AI_COMPLETE", "Snowflake SQL"],
     "setup": "local",
     "images": [
-      { "src": "assets/packs/loss-triangle-suite-1.jpg", "alt": "Portfolio dashboard: reserve KPIs, paid loss development by accident year, and Cortex anomaly alerts" },
-      { "src": "assets/packs/loss-triangle-suite-2.jpg", "alt": "Cortex actuarial agent answering reserve questions in natural language" },
-      { "src": "assets/packs/loss-triangle-suite-3.jpg", "alt": "Triangle explorer: loss development triangles with age-to-age factors" },
-      { "src": "assets/packs/loss-triangle-suite-4.jpg", "alt": "Segment analysis comparing development patterns across coverages" },
-      { "src": "assets/packs/loss-triangle-suite-5.jpg", "alt": "Consistency testing that applies uniform selection rules across triangles" }
+      { "src": "assets/packs/loss-triangle-suite-1.jpg", "alt": "Portfolio dashboard: reserve KPIs, paid loss development by accident year, and anomaly flags computed in Snowflake views" },
+      { "src": "assets/packs/loss-triangle-suite-2.jpg", "alt": "Cortex Agent with Cortex Analyst answering a reserve question over the semantic view, with the supporting triangle" },
+      { "src": "assets/packs/loss-triangle-suite-3.jpg", "alt": "Triangle explorer: cumulative paid losses with age-to-age factors and selected development factors" },
+      { "src": "assets/packs/loss-triangle-suite-4.jpg", "alt": "Segment analysis comparing development patterns across tiers, with insights written by AI_COMPLETE" },
+      { "src": "assets/packs/loss-triangle-suite-5.jpg", "alt": "Consistency test applying uniform selection rules across triangles and comparing prior and current ultimates" }
     ],
     "pagesUrl": "https://sfc-gh-ooral.github.io/sfguide-loss-triangle-analysis/",
     "demoUrl": "https://sfc-gh-ooral.github.io/sfguide-loss-triangle-analysis/try/",
     "repoUrl": "https://github.com/sfc-gh-ooral/sfguide-loss-triangle-analysis",
     "author": "Oz Oral",
-    "updated": "2026-10"
+    "updated": "2026-11"
   },
   {
     "id": "contact-driver-analytics",
@@ -52,19 +52,19 @@
     "industry": "Financial Services",
     "function": "Operations",
     "outcome": "serve-clients",
-    "features": ["Cortex AI", "Sentiment Analysis", "Text Classification", "Snowflake SQL"],
+    "features": ["Cortex AI_COMPLETE", "AI_CLASSIFY", "Sentiment Analysis", "Snowflake SQL"],
     "setup": "local",
     "images": [
-      { "src": "assets/packs/contact-driver-analytics-1.jpg", "alt": "Dashboard: call volume, sentiment, and escalation KPIs with a weekly trend and contacts by line of business" },
-      { "src": "assets/packs/contact-driver-analytics-2.jpg", "alt": "Top contact drivers by line of business, product, segment, and sentiment" },
-      { "src": "assets/packs/contact-driver-analytics-3.jpg", "alt": "AI insights: executive summary, key findings, and recommendations from Cortex" },
-      { "src": "assets/packs/contact-driver-analytics-4.jpg", "alt": "Transcript explorer with sentiment score, AI summary, and the full conversation" }
+      { "src": "assets/packs/contact-driver-analytics-1.jpg", "alt": "Dashboard: weekly call volume, sentiment, and escalation KPIs with a 13-week trend and calls by line of business" },
+      { "src": "assets/packs/contact-driver-analytics-2.jpg", "alt": "Top contact drivers by line of business, product, segment, and caller, with sentiment and resolution rate" },
+      { "src": "assets/packs/contact-driver-analytics-3.jpg", "alt": "Transcript explorer: Cortex sentiment, AI_CLASSIFY driver label, and AI_COMPLETE call summary beside the full conversation" },
+      { "src": "assets/packs/contact-driver-analytics-4.jpg", "alt": "AI insights: executive summary, key findings, and recommendations that AI_COMPLETE writes from driver statistics" }
     ],
     "pagesUrl": "https://sfc-gh-ooral.github.io/sfguide-contact-driver-analytics/",
     "demoUrl": "https://sfc-gh-ooral.github.io/sfguide-contact-driver-analytics/try/",
     "repoUrl": "https://github.com/sfc-gh-ooral/sfguide-contact-driver-analytics",
     "author": "Oz Oral",
-    "updated": "2026-10"
+    "updated": "2026-11"
   },
   {
     "id": "insurance-sales-agent",
