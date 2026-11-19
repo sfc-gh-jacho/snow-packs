@@ -275,6 +275,30 @@
     "updated": "2026-11"
   },
   {
+    "id": "regulatory-qa-mcp",
+    "title": "Regulatory Q&A Desk",
+    "summary": "Help compliance teams check internal policies against regulations through a Snowflake-managed MCP server, with cited answers, AI gap verdicts, control-testing questions, and remediation tickets that a person approves, all governed by each caller's role.",
+    "industry": "Banking",
+    "function": "Compliance",
+    "outcome": "prove-compliance",
+    "features": ["Snowflake-managed MCP Server", "Cortex Search", "Cortex Analyst", "Cortex AI_COMPLETE", "Row Access Policies", "Streamlit in Snowflake"],
+    "tags": ["MCP", "model context protocol", "regulations", "policy gaps", "control testing", "remediation", "agents", "AI governance"],
+    "setup": "local",
+    "images": [
+      { "src": "assets/packs/regulatory-qa-mcp-1.jpg", "alt": "Overview: one Snowflake-managed MCP server exposing two Cortex Search services, Cortex Analyst, a gap UDF and a ticket procedure" },
+      { "src": "assets/packs/regulatory-qa-mcp-2.jpg", "alt": "Ask the desk: a cited gap verdict, the 72-hour rule beside a 7-day policy, from Cortex Search and an AI_COMPLETE tool" },
+      { "src": "assets/packs/regulatory-qa-mcp-3.jpg", "alt": "MCP inspector: each JSON-RPC tools/call request and streamed response, with status, latency and size" },
+      { "src": "assets/packs/regulatory-qa-mcp-4.jpg", "alt": "Approval gate: a person approves each ticket call, and Snowflake still refuses it for a role without the grant" },
+      { "src": "assets/packs/regulatory-qa-mcp-5.jpg", "alt": "Roles and tool grants: which tools each role can list and call, and the grants behind them" },
+      { "src": "assets/packs/regulatory-qa-mcp-6.jpg", "alt": "Audit: what each tool call returned to the client, call by call, and the MCP audit log" }
+    ],
+    "pagesUrl": "https://sfc-gh-jacho.github.io/sfguide-regulatory-qa-mcp/",
+    "demoUrl": "https://sfc-gh-jacho.github.io/sfguide-regulatory-qa-mcp/try/",
+    "repoUrl": "https://github.com/sfc-gh-jacho/sfguide-regulatory-qa-mcp",
+    "author": "Janet Cho",
+    "updated": "2026-11"
+  },
+  {
     "id": "wealth-advisor-assistant",
     "title": "Wealth Advisor Assistant",
     "summary": "Help advisors start each day with ranked next best actions, prepare for client meetings, and ask an AI coach that only sees their own clients.",
